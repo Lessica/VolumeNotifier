@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0F1C7F271A0E210D00A88496 /* VolumeNotifierPrefsController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0F1C7F261A0E210D00A88496 /* VolumeNotifierPrefsController.h */; };
 		0F1C7F291A0E210D00A88496 /* VolumeNotifierPrefsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F1C7F281A0E210D00A88496 /* VolumeNotifierPrefsController.m */; };
-		0F1C7F461A0E229000A88496 /* Preferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F1C7F451A0E229000A88496 /* Preferences.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		0F7F50991A0EE1C70039C9A6 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F7F50981A0EE1C70039C9A6 /* Social.framework */; };
 		0F7F509B1A0EE1D60039C9A6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F7F509A1A0EE1D60039C9A6 /* CoreGraphics.framework */; };
 		0F7F509D1A0EE2110039C9A6 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F7F509C1A0EE2110039C9A6 /* MessageUI.framework */; };
@@ -47,7 +46,6 @@
 		0F1C7F281A0E210D00A88496 /* VolumeNotifierPrefsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VolumeNotifierPrefsController.m; sourceTree = "<group>"; };
 		0F1C7F2D1A0E210D00A88496 /* VolumeNotifierPrefs.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = VolumeNotifierPrefs.plist; path = Package/Library/PreferenceLoader/Preferences/VolumeNotifierPrefs.plist; sourceTree = "<group>"; };
 		0F1C7F381A0E210D00A88496 /* VolumeNotifierPrefs-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VolumeNotifierPrefs-Prefix.pch"; sourceTree = "<group>"; };
-		0F1C7F451A0E229000A88496 /* Preferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Preferences.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Preferences.framework; sourceTree = DEVELOPER_DIR; };
 		0F1C7F4C1A0E2D3300A88496 /* VolumeNotifierPrefsIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = VolumeNotifierPrefsIcon.png; path = Package/Library/PreferenceBundles/VolumeNotifierPrefs.bundle/VolumeNotifierPrefsIcon.png; sourceTree = "<group>"; };
 		0F1C7F4D1A0E2D3300A88496 /* VolumeNotifierPrefsIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "VolumeNotifierPrefsIcon@2x.png"; path = "Package/Library/PreferenceBundles/VolumeNotifierPrefs.bundle/VolumeNotifierPrefsIcon@2x.png"; sourceTree = "<group>"; };
 		0F7F50981A0EE1C70039C9A6 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -92,7 +90,6 @@
 		0FBD899D1A11173A00AE2B90 /* SKTintedListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTintedListController.h; sourceTree = "<group>"; };
 		0FBD899E1A11173A00AE2B90 /* SKTintedSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTintedSwitchCell.h; sourceTree = "<group>"; };
 		0FFFDF8E1A0E4A1A00155ACC /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Localizable.strings; sourceTree = "<group>"; };
-		0FFFDF971A0E680E00155ACC /* SettingsKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SettingsKit.framework; path = ../../../../../opt/theos/frameworks/SettingsKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,7 +103,6 @@
 				0F7F50991A0EE1C70039C9A6 /* Social.framework in Frameworks */,
 				0FA8AE901A0E755100195856 /* UIKit.framework in Frameworks */,
 				0FA8AE8E1A0E754000195856 /* CoreFoundation.framework in Frameworks */,
-				0F1C7F461A0E229000A88496 /* Preferences.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,8 +138,6 @@
 				0FA8AE8B1A0E753900195856 /* Accounts.framework */,
 				0F8EA7BA1A0E751D00F093F8 /* Accelerate.framework */,
 				0F8EA7B81A0E74E500F093F8 /* AVFoundation.framework */,
-				0FFFDF971A0E680E00155ACC /* SettingsKit.framework */,
-				0F1C7F451A0E229000A88496 /* Preferences.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

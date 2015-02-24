@@ -1,0 +1,7 @@
+
+Products/*
+Packages/*
+*.deb
+LatestBuild/*
+
+Products/DEBIAN/control
