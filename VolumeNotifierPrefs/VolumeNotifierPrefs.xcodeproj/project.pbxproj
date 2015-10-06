@@ -35,6 +35,7 @@
 		0FBD89A71A11173A00AE2B90 /* SKTintedControlCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 0FBD899C1A11173A00AE2B90 /* SKTintedControlCell.h */; };
 		0FBD89A81A11173A00AE2B90 /* SKTintedListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0FBD899D1A11173A00AE2B90 /* SKTintedListController.h */; };
 		0FBD89A91A11173A00AE2B90 /* SKTintedSwitchCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 0FBD899E1A11173A00AE2B90 /* SKTintedSwitchCell.h */; };
+		0FD65E0A1BC3F57A0028B180 /* Preferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FD65E091BC3F57A0028B180 /* Preferences.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,6 +90,7 @@
 		0FBD899C1A11173A00AE2B90 /* SKTintedControlCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTintedControlCell.h; sourceTree = "<group>"; };
 		0FBD899D1A11173A00AE2B90 /* SKTintedListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTintedListController.h; sourceTree = "<group>"; };
 		0FBD899E1A11173A00AE2B90 /* SKTintedSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTintedSwitchCell.h; sourceTree = "<group>"; };
+		0FD65E091BC3F57A0028B180 /* Preferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Preferences.framework; path = ../../../../../opt/theos/sdks/iPhoneOS8.1.sdk/System/Library/PrivateFrameworks/Preferences.framework; sourceTree = "<group>"; };
 		0FFFDF8E1A0E4A1A00155ACC /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -97,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FD65E0A1BC3F57A0028B180 /* Preferences.framework in Frameworks */,
 				0F7F509F1A0EE2190039C9A6 /* QuartzCore.framework in Frameworks */,
 				0F7F509D1A0EE2110039C9A6 /* MessageUI.framework in Frameworks */,
 				0F7F509B1A0EE1D60039C9A6 /* CoreGraphics.framework in Frameworks */,
@@ -129,6 +132,7 @@
 		0F1C7F171A0E210C00A88496 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0FD65E091BC3F57A0028B180 /* Preferences.framework */,
 				0F7F509E1A0EE2190039C9A6 /* QuartzCore.framework */,
 				0F7F509C1A0EE2110039C9A6 /* MessageUI.framework */,
 				0F7F509A1A0EE1D60039C9A6 /* CoreGraphics.framework */,
@@ -339,7 +343,7 @@
 		0F1C7F0C1A0E210C00A88496 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				TargetAttributes = {
 					0F1C7F141A0E210C00A88496 = {
 						CreatedOnToolsVersion = 6.1;
@@ -435,6 +439,8 @@
 			buildSettings = {
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
+				ENABLE_TESTABILITY = YES;
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(iOSOpenDevPath)/frameworks/**",
@@ -451,12 +457,13 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "$(iOSOpenDevPath)/include/**";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LIBRARY_SEARCH_PATHS = "$(iOSOpenDevPath)/lib/**";
+				HEADER_SEARCH_PATHS = "/opt/theos/include/**";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = "/opt/theos/lib/**";
 				MACH_O_TYPE = mh_bundle;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-F/opt/theos/frameworks";
-				SDKROOT = iphoneos8.1;
+				SDKROOT = iphoneos7.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
 				iOSOpenDevPath = /opt/iOSOpenDev;
@@ -468,6 +475,7 @@
 			buildSettings = {
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = YES;
+				ENABLE_BITCODE = NO;
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(iOSOpenDevPath)/frameworks/**",
@@ -477,12 +485,12 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "$(iOSOpenDevPath)/include/**";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LIBRARY_SEARCH_PATHS = "$(iOSOpenDevPath)/lib/**";
+				HEADER_SEARCH_PATHS = "/opt/theos/include/**";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = "/opt/theos/lib/**";
 				MACH_O_TYPE = mh_bundle;
 				OTHER_LDFLAGS = "-F/opt/theos/frameworks";
-				SDKROOT = iphoneos8.1;
+				SDKROOT = iphoneos7.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				iOSOpenDevPath = /opt/iOSOpenDev;
@@ -495,23 +503,30 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(DEVELOPER_DIR)/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks",
 					/opt/theos/frameworks,
+					/opt/theos/sdks/iPhoneOS8.1.sdk/System/Library/PrivateFrameworks,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VolumeNotifierPrefs/VolumeNotifierPrefs-Prefix.pch";
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GENERATE_MASTER_OBJECT_FILE = NO;
+				HEADER_SEARCH_PATHS = "/opt/theos/include/**";
 				INFOPLIST_FILE = "VolumeNotifierPrefs/VolumeNotifierPrefs-Info.plist";
 				INSTALL_PATH = /Library/PreferenceBundles;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = "/opt/theos/lib/**";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACH_O_TYPE = mh_bundle;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-F/opt/theos/frameworks";
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.darwindev.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos7.1;
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = bundle;
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
@@ -530,23 +545,30 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(DEVELOPER_DIR)/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks",
 					/opt/theos/frameworks,
+					/opt/theos/sdks/iPhoneOS8.1.sdk/System/Library/PrivateFrameworks,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VolumeNotifierPrefs/VolumeNotifierPrefs-Prefix.pch";
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GENERATE_MASTER_OBJECT_FILE = NO;
+				HEADER_SEARCH_PATHS = "/opt/theos/include/**";
 				INFOPLIST_FILE = "VolumeNotifierPrefs/VolumeNotifierPrefs-Info.plist";
 				INSTALL_PATH = /Library/PreferenceBundles;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = "/opt/theos/lib/**";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACH_O_TYPE = mh_bundle;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-F/opt/theos/frameworks";
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.darwindev.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos7.1;
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = bundle;
 				iOSOpenDevBuildPackageOnAnyBuild = NO;

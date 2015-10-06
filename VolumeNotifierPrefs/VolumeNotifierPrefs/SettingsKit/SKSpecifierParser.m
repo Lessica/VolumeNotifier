@@ -62,8 +62,8 @@
             [spec setProperty:@"PSGroupCell" forKey:@"cell"];
         } else {
             NSString *label = dict[@"label"] == nil ? @"" : dict[@"label"];
-            Class detail = dict[@"detail"] == nil ? nil : objc_getClass([dict[@"detail"] cString]);
-            Class edit = dict[@"pane"] == nil ? nil : objc_getClass([dict[@"pane"] cString]);
+            Class detail = dict[@"detail"] == nil ? nil : objc_getClass([dict[@"detail"] UTF8String]);
+            Class edit = dict[@"pane"] == nil ? nil : objc_getClass([dict[@"pane"] UTF8String]);
             SEL set = dict[@"set"] == nil ? @selector(setPreferenceValue:specifier:) : NSSelectorFromString(dict[@"set"]);
             SEL get = dict[@"get"] == nil ? @selector(readPreferenceValue:) : NSSelectorFromString(dict[@"get"]);
             SEL action = dict[@"action"] == nil ? nil : NSSelectorFromString(dict[@"action"]);
@@ -79,7 +79,7 @@
             
             for (NSString *key in dict) {
                 if ([key isEqual:@"cellClass"]) {
-                    const char *s = [dict[key] cString];
+                    const char *s = [dict[key] UTF8String];
                     [spec setProperty:objc_getClass(s) forKey:key];
                 }
                 else if ([key isEqual:@"validValues"] || [key isEqual:@"validTitles"])

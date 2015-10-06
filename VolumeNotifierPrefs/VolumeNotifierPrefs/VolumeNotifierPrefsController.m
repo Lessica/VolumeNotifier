@@ -22,10 +22,11 @@
 @implementation VolumeNotifierPrefsController
 
 - (UIColor*) tintColor {
-    int r = 0;
-    int g = 0;
-    int b = 0;
-    return [UIColor colorWithRed: r / 255.0f green: g / 255.0f blue: b / 255.0f alpha: 1.0f];
+    return [UIColor darkGrayColor];
+}
+
+-(UIColor*) switchTintColor {
+    return [UIColor grayColor];
 }
 
 - (BOOL) showHeartImage { return NO; }
@@ -185,15 +186,15 @@
             ];
 }
 
-- (void) followOnTwitter:(PSSpecifier*)specifier {
+- (void) followOnTwitter:(PSSpecifier *)specifier {
     [SKSharedHelper openTwitter:kUrl_Twitter];
 }
 
-- (void) visitWebSite:(PSSpecifier*)specifier {
+- (void) visitWebSite:(PSSpecifier *)specifier {
     [SKSharedHelper openWebSite:kUrl_VisitWebSite];
 }
 
-- (void) giveAdvice:(PSSpecifier*)specifier {
+- (void) giveAdvice:(PSSpecifier *)specifier {
     [SKSharedHelper openEmail:kUrl_MailTo subject:kUrl_MailSubject];
 }
 

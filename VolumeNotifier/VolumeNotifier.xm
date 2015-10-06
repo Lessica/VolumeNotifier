@@ -80,7 +80,7 @@ static float systemVolume = 0;
 - (void) playMedia:(id)data {
     @autoreleasepool {
         SndDelegate *sndMain = [SndDelegate alloc];
-        AVAudioPlayer *player = (AVAudioPlayer*)data;
+        AVAudioPlayer *player = (AVAudioPlayer *)data;
         [player prepareToPlay];
         [player setDelegate:sndMain];
         [player play];
