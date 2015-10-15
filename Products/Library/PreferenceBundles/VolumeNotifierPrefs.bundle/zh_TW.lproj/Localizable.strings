@@ -7,7 +7,7 @@
 "Block Volume HUD"="隱藏浮窗";
 "Enable Vibrate"="振動";
 "Enable Flashlight"="手電筒";
-"You can turn off the flashlight from CC."="你可以隨時從控制中心關閉手電筒。";
+"You can turn off the flashlight from CC.\nVolumeNotifier will not work perfectly when the device is locked."="你可以隨時從控制中心關閉手電筒。\nVolumeNotifier 無法在鎖屏狀態下正常工作。";
 "Sound Effect"="音效";
 "Built-in"="預設";
 "Custom"="自定義";
@@ -18,3 +18,7 @@
 "Visit 82Flex.com"="訪問 82Flex.com";
 "Give suggestions"="提出建議";
 "Donate to 82Flex"="捐贈 82Flex™";
+"Long Press To Change Tracks"="長按切換歌曲";
+"Experiment"="測試功能";
+"Transparent HUD"="透明浮窗";
+"Long press \"+\" or \"-\" to change between tracks.\nPress \"+\" and then press \"-\" to play/pause."="長按 \"+\" 或 \"-\" 以在歌曲間切換.\n按 \"+\" 然後立即按 \"-\" 以 播放或暫停";

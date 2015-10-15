@@ -17,6 +17,9 @@
 #define DEFAULT_BLOCK_HUD NO
 #define PREFS_BLOCK_HUD_KEY @"blockHUD"
 
+#define DEFAULT_TRANSPARENT_HUD NO
+#define PREFS_TRANSPARENT_HUD_KEY @"transparentHUD"
+
 #define DEFAULT_VIB_ENABLED NO
 #define PREFS_VIB_ENABLED_KEY @"enableVib"
 
@@ -48,6 +51,8 @@
 
 #define MAIN_BLOCK_HUD ([preferences objectForKey: PREFS_BLOCK_HUD_KEY] ? [[preferences objectForKey: PREFS_BLOCK_HUD_KEY] boolValue] : DEFAULT_BLOCK_HUD)
 
+#define MAIN_TRANSPARENT_HUD ([preferences objectForKey: PREFS_TRANSPARENT_HUD_KEY] ? [[preferences objectForKey: PREFS_TRANSPARENT_HUD_KEY] boolValue] : DEFAULT_TRANSPARENT_HUD)
+
 #define MAIN_VIB_ENABLED ([preferences objectForKey: PREFS_VIB_ENABLED_KEY] ? [[preferences objectForKey: PREFS_VIB_ENABLED_KEY] boolValue] : DEFAULT_VIB_ENABLED)
 
 #define MAIN_FLASH_ENABLED ([preferences objectForKey: PREFS_FLASH_ENABLED_KEY] ? [[preferences objectForKey: PREFS_FLASH_ENABLED_KEY] boolValue] : DEFAULT_FLASH_ENABLED)
@@ -67,7 +72,7 @@
 #define APPID @"com.darwindev.VolumeNotifier"
 #define PREFS_PATH [NSString stringWithFormat:@"%@/Library/Preferences/%@.plist", NSHomeDirectory(), APPID]
 
-#define DEFAULT_PREFS [NSDictionary dictionaryWithObjectsAndKeys: @DEFAULT_ENABLED, PREFS_ENABLED_KEY, @DEFAULT_ENABLED_WHEN_PLAYING, PREFS_ENABLED_WHEN_PLAYING_KEY, @DEFAULT_VIB_ENABLED, PREFS_VIB_ENABLED_KEY, DEFAULT_SOUND_NAME, PREFS_SOUND_NAME_KEY, @DEFAULT_SOUND_CHOICE, PREFS_SOUND_CHOICE_KEY, @DEFAULT_ENABLED_IN_CC, PREFS_ENABLED_IN_CC_KEY, @DEFAULT_BLOCK_HUD, PREFS_BLOCK_HUD_KEY, @DEFAULT_FLASH_ENABLED, PREFS_FLASH_ENABLED_KEY, nil]
+#define DEFAULT_PREFS [NSDictionary dictionaryWithObjectsAndKeys: @DEFAULT_ENABLED, PREFS_ENABLED_KEY, @DEFAULT_ENABLED_WHEN_PLAYING, PREFS_ENABLED_WHEN_PLAYING_KEY, @DEFAULT_VIB_ENABLED, PREFS_VIB_ENABLED_KEY, DEFAULT_SOUND_NAME, PREFS_SOUND_NAME_KEY, @DEFAULT_SOUND_CHOICE, PREFS_SOUND_CHOICE_KEY, @DEFAULT_ENABLED_IN_CC, PREFS_ENABLED_IN_CC_KEY, @DEFAULT_BLOCK_HUD, PREFS_BLOCK_HUD_KEY, @DEFAULT_FLASH_ENABLED, PREFS_FLASH_ENABLED_KEY, @DEFAULT_TRANSPARENT_HUD, PREFS_TRANSPARENT_HUD_KEY, @DEFAULT_CHANGE_TRACKS_ENABLED, PREFS_CHANGE_TRACKS_ENABLED_KEY, nil]
 
 #define IS_IOS_8_PLUS [%c(SBBannerController) instancesRespondToSelector: @selector(_cancelBannerDismissTimers)]
 
@@ -81,12 +86,11 @@ static float lastVolume;
 static NSTimeInterval lastTimePressed;
 
 @interface VolumeControl : NSObject
-+(id)sharedVolumeControl;
-
++ (id)sharedVolumeControl;
 - (void)decreaseVolume;
 - (void)increaseVolume;
--(BOOL)_isMusicPlayingSomewhere;
--(float)getMediaVolume;
+- (BOOL)_isMusicPlayingSomewhere;
+- (float)getMediaVolume;
 @end
 
 @interface SBMediaController : NSObject
@@ -200,6 +204,8 @@ static void setTorchLevel(double level) {
 
 @end
 
+%group VolumeNotifier
+
 %hook VolumeControl
 
 /*
@@ -297,6 +303,25 @@ static void setTorchLevel(double level) {
 
 %end
 
+%hook SBHUDView
+
+- (void) layoutSubviews {
+    if (MAIN_ENABLED && MAIN_TRANSPARENT_HUD) {
+        id backdropView = MSHookIvar<id>(self, "_backdropView");
+        if ([backdropView respondsToSelector:@selector(subviews)]) {
+            NSArray *subViews = [backdropView subviews];
+            for (UIView *subView in subViews) {
+                if (![[subView description] containsString:@"_UIBackdropContentView"]) {
+                    [subView setHidden:YES];
+                }
+            }
+        }
+    }
+    %orig;
+}
+
+%end
+
 %hook MPUMediaControlsVolumeView
 
 - (void) _volumeSliderStoppedChanging:(id)pid {
@@ -353,6 +378,8 @@ static void setTorchLevel(double level) {
 
 %end
 
+%end
+
 static void loadSettings () {
     if (preferences) {
         [preferences release];
@@ -380,4 +407,5 @@ static void didChangeSettings (CFNotificationCenterRef center, void *observer, C
     CFNotificationCenterRef center = CFNotificationCenterGetDarwinNotifyCenter();
     CFNotificationCenterAddObserver(center, NULL, &didChangeSettings, (CFStringRef)@"com.darwindev.VolumeNotifier-preferencesChanged", NULL, 0);
     loadSettings();
+    %init(VolumeNotifier);
 }

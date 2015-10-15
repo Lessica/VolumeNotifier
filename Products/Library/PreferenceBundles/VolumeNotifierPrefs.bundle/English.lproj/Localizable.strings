@@ -7,7 +7,7 @@
 "Block Volume HUD"="Block Volume HUD";
 "Enable Vibrate"="Enable Vibrate";
 "Enable Flashlight"="Enable Flashlight";
-"You can turn off the flashlight from CC."="You can turn off the flashlight from CC.";
+"You can turn off the flashlight from CC.\nVolumeNotifier will not work perfectly when the device is locked."="You can turn off the flashlight from CC.\nVolumeNotifier will not work perfectly when the device is locked.";
 "Sound Effect"="Sound Effect";
 "Built-in"="Built-in";
 "Custom"="Custom";
@@ -18,3 +18,7 @@
 "Visit 82Flex.com"="Visit 82Flex.com";
 "Give suggestions"="Give suggestions";
 "Donate to 82Flex"="Donate to 82Flex";
+"Long Press To Change Tracks"="Long Press To Change Tracks";
+"Experiment"="Experiment";
+"Long press \"+\" or \"-\" to change between tracks.\nPress \"+\" and then press \"-\" to play/pause."="Long press \"+\" or \"-\" to change between tracks.\nPress \"+\" and then press \"-\" to play/pause.";
+"Transparent HUD"="Transparent HUD";

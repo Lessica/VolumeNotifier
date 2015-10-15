@@ -103,6 +103,23 @@
                     },
                 @{
                     @"cell" : @"PSSwitchCell",
+                    @"label" : @"Transparent HUD",
+                    @"default" : @NO,
+                    @"defaults" : @"com.darwindev.VolumeNotifier",
+                    @"PostNotification" : @"com.darwindev.VolumeNotifier-preferencesChanged",
+                    @"key" : @"transparentHUD"
+                    },
+                @{
+                    @"cell" : @"PSGroupCell",
+                    @"footerText" : @"You can turn off the flashlight from CC.\nVolumeNotifier will not work perfectly when the device is locked."
+                    },
+                @{
+                    @"cell" : @"PSGroupCell",
+                    @"label" : @"Experiment",
+                    @"isStaticText" : @YES
+                    },
+                @{
+                    @"cell" : @"PSSwitchCell",
                     @"label" : @"Long Press To Change Tracks",
                     @"default" : @NO,
                     @"defaults" : @"com.darwindev.VolumeNotifier",
@@ -111,7 +128,7 @@
                     },
                 @{
                     @"cell" : @"PSGroupCell",
-                    @"footerText" : @"You can turn off the flashlight from CC.\nVolumeNotifier will not work perfectly when the device is locked."
+                    @"footerText" : @"Long press \"+\" or \"-\" to change between tracks.\nPress \"+\" and then press \"-\" to play/pause."
                     },
                 @{
                     @"cell" : @"PSGroupCell",

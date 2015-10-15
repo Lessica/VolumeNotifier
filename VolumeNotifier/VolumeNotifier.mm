@@ -18,6 +18,9 @@
 #define DEFAULT_BLOCK_HUD NO
 #define PREFS_BLOCK_HUD_KEY @"blockHUD"
 
+#define DEFAULT_TRANSPARENT_HUD NO
+#define PREFS_TRANSPARENT_HUD_KEY @"transparentHUD"
+
 #define DEFAULT_VIB_ENABLED NO
 #define PREFS_VIB_ENABLED_KEY @"enableVib"
 
@@ -49,6 +52,8 @@
 
 #define MAIN_BLOCK_HUD ([preferences objectForKey: PREFS_BLOCK_HUD_KEY] ? [[preferences objectForKey: PREFS_BLOCK_HUD_KEY] boolValue] : DEFAULT_BLOCK_HUD)
 
+#define MAIN_TRANSPARENT_HUD ([preferences objectForKey: PREFS_TRANSPARENT_HUD_KEY] ? [[preferences objectForKey: PREFS_TRANSPARENT_HUD_KEY] boolValue] : DEFAULT_TRANSPARENT_HUD)
+
 #define MAIN_VIB_ENABLED ([preferences objectForKey: PREFS_VIB_ENABLED_KEY] ? [[preferences objectForKey: PREFS_VIB_ENABLED_KEY] boolValue] : DEFAULT_VIB_ENABLED)
 
 #define MAIN_FLASH_ENABLED ([preferences objectForKey: PREFS_FLASH_ENABLED_KEY] ? [[preferences objectForKey: PREFS_FLASH_ENABLED_KEY] boolValue] : DEFAULT_FLASH_ENABLED)
@@ -63,10 +68,10 @@
 
 #include <logos/logos.h>
 #include <substrate.h>
-@class MPUMediaControlsVolumeView; @class VolumeControl; @class SBBannerController; @class SBCCFlashlightSetting; @class SBMediaController; 
-static void (*_logos_orig$_ungrouped$VolumeControl$setVolume$)(VolumeControl*, SEL, float); static void _logos_method$_ungrouped$VolumeControl$setVolume$(VolumeControl*, SEL, float); static void (*_logos_orig$_ungrouped$VolumeControl$increaseVolume)(VolumeControl*, SEL); static void _logos_method$_ungrouped$VolumeControl$increaseVolume(VolumeControl*, SEL); static void (*_logos_orig$_ungrouped$VolumeControl$decreaseVolume)(VolumeControl*, SEL); static void _logos_method$_ungrouped$VolumeControl$decreaseVolume(VolumeControl*, SEL); static void (*_logos_orig$_ungrouped$VolumeControl$_presentVolumeHUDWithMode$volume$)(VolumeControl*, SEL, int, float); static void _logos_method$_ungrouped$VolumeControl$_presentVolumeHUDWithMode$volume$(VolumeControl*, SEL, int, float); static void (*_logos_orig$_ungrouped$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$)(MPUMediaControlsVolumeView*, SEL, id); static void _logos_method$_ungrouped$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$(MPUMediaControlsVolumeView*, SEL, id); static bool (*_logos_orig$_ungrouped$SBCCFlashlightSetting$isFlashlightOn)(SBCCFlashlightSetting*, SEL); static bool _logos_method$_ungrouped$SBCCFlashlightSetting$isFlashlightOn(SBCCFlashlightSetting*, SEL); static bool (*_logos_orig$_ungrouped$SBCCFlashlightSetting$_enableTorch$)(SBCCFlashlightSetting*, SEL, bool); static bool _logos_method$_ungrouped$SBCCFlashlightSetting$_enableTorch$(SBCCFlashlightSetting*, SEL, bool); static void (*_logos_orig$_ungrouped$SBCCFlashlightSetting$_updateState)(SBCCFlashlightSetting*, SEL); static void _logos_method$_ungrouped$SBCCFlashlightSetting$_updateState(SBCCFlashlightSetting*, SEL); 
-static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBMediaController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBMediaController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBBannerController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBBannerController"); } return _klass; }
-#line 63 "/Users/Zheng/Projects/VolumeNotifier/VolumeNotifier/VolumeNotifier.xm"
+@class MPUMediaControlsVolumeView; @class SBHUDView; @class SBMediaController; @class VolumeControl; @class SBBannerController; @class SBCCFlashlightSetting; 
+
+static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBBannerController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBBannerController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBMediaController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBMediaController"); } return _klass; }
+#line 68 "/Users/Zheng/Projects/VolumeNotifier/VolumeNotifier/VolumeNotifier.xm"
 #define IS_PLAYING ([[_logos_static_class_lookup$SBMediaController() sharedInstance] isPlaying])
 
 #define SOUND_PREFS_PATH [NSString stringWithFormat:@"%@/Library/Preferences/%@.plist", NSHomeDirectory(), @"com.apple.preferences.sounds"]
@@ -74,7 +79,7 @@ static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _
 #define APPID @"com.darwindev.VolumeNotifier"
 #define PREFS_PATH [NSString stringWithFormat:@"%@/Library/Preferences/%@.plist", NSHomeDirectory(), APPID]
 
-#define DEFAULT_PREFS [NSDictionary dictionaryWithObjectsAndKeys: @DEFAULT_ENABLED, PREFS_ENABLED_KEY, @DEFAULT_ENABLED_WHEN_PLAYING, PREFS_ENABLED_WHEN_PLAYING_KEY, @DEFAULT_VIB_ENABLED, PREFS_VIB_ENABLED_KEY, DEFAULT_SOUND_NAME, PREFS_SOUND_NAME_KEY, @DEFAULT_SOUND_CHOICE, PREFS_SOUND_CHOICE_KEY, @DEFAULT_ENABLED_IN_CC, PREFS_ENABLED_IN_CC_KEY, @DEFAULT_BLOCK_HUD, PREFS_BLOCK_HUD_KEY, @DEFAULT_FLASH_ENABLED, PREFS_FLASH_ENABLED_KEY, nil]
+#define DEFAULT_PREFS [NSDictionary dictionaryWithObjectsAndKeys: @DEFAULT_ENABLED, PREFS_ENABLED_KEY, @DEFAULT_ENABLED_WHEN_PLAYING, PREFS_ENABLED_WHEN_PLAYING_KEY, @DEFAULT_VIB_ENABLED, PREFS_VIB_ENABLED_KEY, DEFAULT_SOUND_NAME, PREFS_SOUND_NAME_KEY, @DEFAULT_SOUND_CHOICE, PREFS_SOUND_CHOICE_KEY, @DEFAULT_ENABLED_IN_CC, PREFS_ENABLED_IN_CC_KEY, @DEFAULT_BLOCK_HUD, PREFS_BLOCK_HUD_KEY, @DEFAULT_FLASH_ENABLED, PREFS_FLASH_ENABLED_KEY, @DEFAULT_TRANSPARENT_HUD, PREFS_TRANSPARENT_HUD_KEY, @DEFAULT_CHANGE_TRACKS_ENABLED, PREFS_CHANGE_TRACKS_ENABLED_KEY, nil]
 
 #define IS_IOS_8_PLUS [_logos_static_class_lookup$SBBannerController() instancesRespondToSelector: @selector(_cancelBannerDismissTimers)]
 
@@ -88,12 +93,11 @@ static float lastVolume;
 static NSTimeInterval lastTimePressed;
 
 @interface VolumeControl : NSObject
-+(id)sharedVolumeControl;
-
++ (id)sharedVolumeControl;
 - (void)decreaseVolume;
 - (void)increaseVolume;
--(BOOL)_isMusicPlayingSomewhere;
--(float)getMediaVolume;
+- (BOOL)_isMusicPlayingSomewhere;
+- (float)getMediaVolume;
 @end
 
 @interface SBMediaController : NSObject
@@ -207,6 +211,7 @@ static void setTorchLevel(double level) {
 
 @end
 
+static void (*_logos_orig$VolumeNotifier$VolumeControl$setVolume$)(VolumeControl*, SEL, float); static void _logos_method$VolumeNotifier$VolumeControl$setVolume$(VolumeControl*, SEL, float); static void (*_logos_orig$VolumeNotifier$VolumeControl$increaseVolume)(VolumeControl*, SEL); static void _logos_method$VolumeNotifier$VolumeControl$increaseVolume(VolumeControl*, SEL); static void (*_logos_orig$VolumeNotifier$VolumeControl$decreaseVolume)(VolumeControl*, SEL); static void _logos_method$VolumeNotifier$VolumeControl$decreaseVolume(VolumeControl*, SEL); static void (*_logos_orig$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$)(VolumeControl*, SEL, int, float); static void _logos_method$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$(VolumeControl*, SEL, int, float); static void (*_logos_orig$VolumeNotifier$SBHUDView$layoutSubviews)(SBHUDView*, SEL); static void _logos_method$VolumeNotifier$SBHUDView$layoutSubviews(SBHUDView*, SEL); static void (*_logos_orig$VolumeNotifier$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$)(MPUMediaControlsVolumeView*, SEL, id); static void _logos_method$VolumeNotifier$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$(MPUMediaControlsVolumeView*, SEL, id); static bool (*_logos_orig$VolumeNotifier$SBCCFlashlightSetting$isFlashlightOn)(SBCCFlashlightSetting*, SEL); static bool _logos_method$VolumeNotifier$SBCCFlashlightSetting$isFlashlightOn(SBCCFlashlightSetting*, SEL); static bool (*_logos_orig$VolumeNotifier$SBCCFlashlightSetting$_enableTorch$)(SBCCFlashlightSetting*, SEL, bool); static bool _logos_method$VolumeNotifier$SBCCFlashlightSetting$_enableTorch$(SBCCFlashlightSetting*, SEL, bool); static void (*_logos_orig$VolumeNotifier$SBCCFlashlightSetting$_updateState)(SBCCFlashlightSetting*, SEL); static void _logos_method$VolumeNotifier$SBCCFlashlightSetting$_updateState(SBCCFlashlightSetting*, SEL); 
 
 
 
@@ -214,14 +219,15 @@ static void setTorchLevel(double level) {
 
 
 
-static void _logos_method$_ungrouped$VolumeControl$setVolume$(VolumeControl* self, SEL _cmd, float volume) {
-    _logos_orig$_ungrouped$VolumeControl$setVolume$(self, _cmd, volume);
+
+static void _logos_method$VolumeNotifier$VolumeControl$setVolume$(VolumeControl* self, SEL _cmd, float volume) {
+    _logos_orig$VolumeNotifier$VolumeControl$setVolume$(self, _cmd, volume);
     float maxBound = MIN(volume, 1.f);
     float boundedVolume = MAX(maxBound, 0.f);
     systemVolume = boundedVolume;
 }
 
-static void _logos_method$_ungrouped$VolumeControl$increaseVolume(VolumeControl* self, SEL _cmd) {
+static void _logos_method$VolumeNotifier$VolumeControl$increaseVolume(VolumeControl* self, SEL _cmd) {
     if (MAIN_ENABLED) {
         if (MAIN_CHANGE_TRACKS_ENABLED) {
             if (lastButtonPressed == 1) {
@@ -244,7 +250,7 @@ static void _logos_method$_ungrouped$VolumeControl$increaseVolume(VolumeControl*
         
         lastVolume = [self getMediaVolume];
     }
-    _logos_orig$_ungrouped$VolumeControl$increaseVolume(self, _cmd);
+    _logos_orig$VolumeNotifier$VolumeControl$increaseVolume(self, _cmd);
     if (MAIN_ENABLED) {
         if ((IS_PLAYING == NO) || (MAIN_ENABLED_WHEN_PLAYING == YES)) {
             SNDPlay *sndObj = [SNDPlay alloc];
@@ -254,7 +260,7 @@ static void _logos_method$_ungrouped$VolumeControl$increaseVolume(VolumeControl*
     }
 }
 
-static void _logos_method$_ungrouped$VolumeControl$decreaseVolume(VolumeControl* self, SEL _cmd) {
+static void _logos_method$VolumeNotifier$VolumeControl$decreaseVolume(VolumeControl* self, SEL _cmd) {
     if (MAIN_ENABLED) {
         if (MAIN_CHANGE_TRACKS_ENABLED) {
             if (lastButtonPressed == -1) {
@@ -277,7 +283,7 @@ static void _logos_method$_ungrouped$VolumeControl$decreaseVolume(VolumeControl*
         
         lastVolume = [self getMediaVolume];
     }
-    _logos_orig$_ungrouped$VolumeControl$decreaseVolume(self, _cmd);
+    _logos_orig$VolumeNotifier$VolumeControl$decreaseVolume(self, _cmd);
     if (MAIN_ENABLED) {
         if ((IS_PLAYING == NO) || (MAIN_ENABLED_WHEN_PLAYING == YES)) {
             SNDPlay *sndObj = [SNDPlay alloc];
@@ -287,7 +293,7 @@ static void _logos_method$_ungrouped$VolumeControl$decreaseVolume(VolumeControl*
     }
 }
 
-static void _logos_method$_ungrouped$VolumeControl$_presentVolumeHUDWithMode$volume$(VolumeControl* self, SEL _cmd, int mode, float vol) {
+static void _logos_method$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$(VolumeControl* self, SEL _cmd, int mode, float vol) {
     if (MAIN_ENABLED) {
         if (MAIN_FLASH_ENABLED == YES) {
             setTorchLevel(vol);
@@ -295,10 +301,10 @@ static void _logos_method$_ungrouped$VolumeControl$_presentVolumeHUDWithMode$vol
             setTorchLevel(0);
         }
         if ((MAIN_BLOCK_HUD) == NO) {
-            _logos_orig$_ungrouped$VolumeControl$_presentVolumeHUDWithMode$volume$(self, _cmd, mode, vol);
+            _logos_orig$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$(self, _cmd, mode, vol);
         }
     } else {
-        _logos_orig$_ungrouped$VolumeControl$_presentVolumeHUDWithMode$volume$(self, _cmd, mode, vol);
+        _logos_orig$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$(self, _cmd, mode, vol);
     }
 }
 
@@ -306,8 +312,27 @@ static void _logos_method$_ungrouped$VolumeControl$_presentVolumeHUDWithMode$vol
 
 
 
-static void _logos_method$_ungrouped$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$(MPUMediaControlsVolumeView* self, SEL _cmd, id pid) {
-    _logos_orig$_ungrouped$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$(self, _cmd, pid);
+static void _logos_method$VolumeNotifier$SBHUDView$layoutSubviews(SBHUDView* self, SEL _cmd) {
+    if (MAIN_ENABLED && MAIN_TRANSPARENT_HUD) {
+        id backdropView = MSHookIvar<id>(self, "_backdropView");
+        if ([backdropView respondsToSelector:@selector(subviews)]) {
+            NSArray *subViews = [backdropView subviews];
+            for (UIView *subView in subViews) {
+                if (![[subView description] containsString:@"_UIBackdropContentView"]) {
+                    [subView setHidden:YES];
+                }
+            }
+        }
+    }
+    _logos_orig$VolumeNotifier$SBHUDView$layoutSubviews(self, _cmd);
+}
+
+
+
+
+
+static void _logos_method$VolumeNotifier$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$(MPUMediaControlsVolumeView* self, SEL _cmd, id pid) {
+    _logos_orig$VolumeNotifier$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$(self, _cmd, pid);
     if ((MAIN_ENABLED) && (MAIN_CC_ENABLED)) {
         if (IS_PLAYING == NO) {
             SNDPlay *sndObj = [SNDPlay alloc];
@@ -327,36 +352,38 @@ static void _logos_method$_ungrouped$MPUMediaControlsVolumeView$_volumeSliderSto
 
 
 
-static bool _logos_method$_ungrouped$SBCCFlashlightSetting$isFlashlightOn(SBCCFlashlightSetting* self, SEL _cmd) {
+static bool _logos_method$VolumeNotifier$SBCCFlashlightSetting$isFlashlightOn(SBCCFlashlightSetting* self, SEL _cmd) {
     if (MAIN_ENABLED && MAIN_FLASH_ENABLED) {
-        if (_logos_orig$_ungrouped$SBCCFlashlightSetting$isFlashlightOn(self, _cmd) || (torchOpen == YES)) {
+        if (_logos_orig$VolumeNotifier$SBCCFlashlightSetting$isFlashlightOn(self, _cmd) || (torchOpen == YES)) {
             return YES;
         } else {
             return NO;
         }
     } else {
-        return _logos_orig$_ungrouped$SBCCFlashlightSetting$isFlashlightOn(self, _cmd);
+        return _logos_orig$VolumeNotifier$SBCCFlashlightSetting$isFlashlightOn(self, _cmd);
     }
 }
 
-static bool _logos_method$_ungrouped$SBCCFlashlightSetting$_enableTorch$(SBCCFlashlightSetting* self, SEL _cmd, bool arg1) {
+static bool _logos_method$VolumeNotifier$SBCCFlashlightSetting$_enableTorch$(SBCCFlashlightSetting* self, SEL _cmd, bool arg1) {
     if (MAIN_ENABLED && MAIN_FLASH_ENABLED) {
         if (torchOpen == YES) {
             setTorchLevel(0);
             return NO;
         }
     }
-    return _logos_orig$_ungrouped$SBCCFlashlightSetting$_enableTorch$(self, _cmd, arg1);
+    return _logos_orig$VolumeNotifier$SBCCFlashlightSetting$_enableTorch$(self, _cmd, arg1);
 }
 
-static void _logos_method$_ungrouped$SBCCFlashlightSetting$_updateState(SBCCFlashlightSetting* self, SEL _cmd) {
+static void _logos_method$VolumeNotifier$SBCCFlashlightSetting$_updateState(SBCCFlashlightSetting* self, SEL _cmd) {
     if (MAIN_ENABLED && MAIN_FLASH_ENABLED) {
         if (torchOpen == YES) {
             return;
         }
     }
-    _logos_orig$_ungrouped$SBCCFlashlightSetting$_updateState(self, _cmd);
+    _logos_orig$VolumeNotifier$SBCCFlashlightSetting$_updateState(self, _cmd);
 }
+
+
 
 
 
@@ -383,11 +410,9 @@ static void didChangeSettings (CFNotificationCenterRef center, void *observer, C
     loadSettings();
 }
 
-static __attribute__((constructor)) void _logosLocalCtor_c2a53aed() {
+static __attribute__((constructor)) void _logosLocalCtor_157f0f92() {
     CFNotificationCenterRef center = CFNotificationCenterGetDarwinNotifyCenter();
     CFNotificationCenterAddObserver(center, NULL, &didChangeSettings, (CFStringRef)@"com.darwindev.VolumeNotifier-preferencesChanged", NULL, 0);
     loadSettings();
+    {Class _logos_class$VolumeNotifier$VolumeControl = objc_getClass("VolumeControl"); MSHookMessageEx(_logos_class$VolumeNotifier$VolumeControl, @selector(setVolume:), (IMP)&_logos_method$VolumeNotifier$VolumeControl$setVolume$, (IMP*)&_logos_orig$VolumeNotifier$VolumeControl$setVolume$);MSHookMessageEx(_logos_class$VolumeNotifier$VolumeControl, @selector(increaseVolume), (IMP)&_logos_method$VolumeNotifier$VolumeControl$increaseVolume, (IMP*)&_logos_orig$VolumeNotifier$VolumeControl$increaseVolume);MSHookMessageEx(_logos_class$VolumeNotifier$VolumeControl, @selector(decreaseVolume), (IMP)&_logos_method$VolumeNotifier$VolumeControl$decreaseVolume, (IMP*)&_logos_orig$VolumeNotifier$VolumeControl$decreaseVolume);MSHookMessageEx(_logos_class$VolumeNotifier$VolumeControl, @selector(_presentVolumeHUDWithMode:volume:), (IMP)&_logos_method$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$, (IMP*)&_logos_orig$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$);Class _logos_class$VolumeNotifier$SBHUDView = objc_getClass("SBHUDView"); MSHookMessageEx(_logos_class$VolumeNotifier$SBHUDView, @selector(layoutSubviews), (IMP)&_logos_method$VolumeNotifier$SBHUDView$layoutSubviews, (IMP*)&_logos_orig$VolumeNotifier$SBHUDView$layoutSubviews);Class _logos_class$VolumeNotifier$MPUMediaControlsVolumeView = objc_getClass("MPUMediaControlsVolumeView"); MSHookMessageEx(_logos_class$VolumeNotifier$MPUMediaControlsVolumeView, @selector(_volumeSliderStoppedChanging:), (IMP)&_logos_method$VolumeNotifier$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$, (IMP*)&_logos_orig$VolumeNotifier$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$);Class _logos_class$VolumeNotifier$SBCCFlashlightSetting = objc_getClass("SBCCFlashlightSetting"); MSHookMessageEx(_logos_class$VolumeNotifier$SBCCFlashlightSetting, @selector(isFlashlightOn), (IMP)&_logos_method$VolumeNotifier$SBCCFlashlightSetting$isFlashlightOn, (IMP*)&_logos_orig$VolumeNotifier$SBCCFlashlightSetting$isFlashlightOn);MSHookMessageEx(_logos_class$VolumeNotifier$SBCCFlashlightSetting, @selector(_enableTorch:), (IMP)&_logos_method$VolumeNotifier$SBCCFlashlightSetting$_enableTorch$, (IMP*)&_logos_orig$VolumeNotifier$SBCCFlashlightSetting$_enableTorch$);MSHookMessageEx(_logos_class$VolumeNotifier$SBCCFlashlightSetting, @selector(_updateState), (IMP)&_logos_method$VolumeNotifier$SBCCFlashlightSetting$_updateState, (IMP*)&_logos_orig$VolumeNotifier$SBCCFlashlightSetting$_updateState);}
 }
-static __attribute__((constructor)) void _logosLocalInit() {
-{Class _logos_class$_ungrouped$VolumeControl = objc_getClass("VolumeControl"); MSHookMessageEx(_logos_class$_ungrouped$VolumeControl, @selector(setVolume:), (IMP)&_logos_method$_ungrouped$VolumeControl$setVolume$, (IMP*)&_logos_orig$_ungrouped$VolumeControl$setVolume$);MSHookMessageEx(_logos_class$_ungrouped$VolumeControl, @selector(increaseVolume), (IMP)&_logos_method$_ungrouped$VolumeControl$increaseVolume, (IMP*)&_logos_orig$_ungrouped$VolumeControl$increaseVolume);MSHookMessageEx(_logos_class$_ungrouped$VolumeControl, @selector(decreaseVolume), (IMP)&_logos_method$_ungrouped$VolumeControl$decreaseVolume, (IMP*)&_logos_orig$_ungrouped$VolumeControl$decreaseVolume);MSHookMessageEx(_logos_class$_ungrouped$VolumeControl, @selector(_presentVolumeHUDWithMode:volume:), (IMP)&_logos_method$_ungrouped$VolumeControl$_presentVolumeHUDWithMode$volume$, (IMP*)&_logos_orig$_ungrouped$VolumeControl$_presentVolumeHUDWithMode$volume$);Class _logos_class$_ungrouped$MPUMediaControlsVolumeView = objc_getClass("MPUMediaControlsVolumeView"); MSHookMessageEx(_logos_class$_ungrouped$MPUMediaControlsVolumeView, @selector(_volumeSliderStoppedChanging:), (IMP)&_logos_method$_ungrouped$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$, (IMP*)&_logos_orig$_ungrouped$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$);Class _logos_class$_ungrouped$SBCCFlashlightSetting = objc_getClass("SBCCFlashlightSetting"); MSHookMessageEx(_logos_class$_ungrouped$SBCCFlashlightSetting, @selector(isFlashlightOn), (IMP)&_logos_method$_ungrouped$SBCCFlashlightSetting$isFlashlightOn, (IMP*)&_logos_orig$_ungrouped$SBCCFlashlightSetting$isFlashlightOn);MSHookMessageEx(_logos_class$_ungrouped$SBCCFlashlightSetting, @selector(_enableTorch:), (IMP)&_logos_method$_ungrouped$SBCCFlashlightSetting$_enableTorch$, (IMP*)&_logos_orig$_ungrouped$SBCCFlashlightSetting$_enableTorch$);MSHookMessageEx(_logos_class$_ungrouped$SBCCFlashlightSetting, @selector(_updateState), (IMP)&_logos_method$_ungrouped$SBCCFlashlightSetting$_updateState, (IMP*)&_logos_orig$_ungrouped$SBCCFlashlightSetting$_updateState);} }
-#line 384 "/Users/Zheng/Projects/VolumeNotifier/VolumeNotifier/VolumeNotifier.xm"
