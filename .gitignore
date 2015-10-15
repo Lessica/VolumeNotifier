@@ -2,6 +2,7 @@
 Products/*
 Packages/*
 *.deb
+*.zip
 LatestBuild/*
-
+Workspace/*
 Products/DEBIAN/control

@@ -1,8 +1,5 @@
 #import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
-#import <SpringBoard/SpringBoard.h>
-#import <AudioToolbox/AudioToolbox.h>
-#import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 #import <SndDelegate.h>
@@ -25,6 +22,9 @@
 
 #define DEFAULT_FLASH_ENABLED NO
 #define PREFS_FLASH_ENABLED_KEY @"enableFlash"
+
+#define DEFAULT_CHANGE_TRACKS_ENABLED NO
+#define PREFS_CHANGE_TRACKS_ENABLED_KEY @"changeTracks"
 
 #define DEFAULT_SOUND_NAME @""
 #define PREFS_SOUND_NAME_KEY @"soundName"
@@ -52,6 +52,8 @@
 
 #define MAIN_FLASH_ENABLED ([preferences objectForKey: PREFS_FLASH_ENABLED_KEY] ? [[preferences objectForKey: PREFS_FLASH_ENABLED_KEY] boolValue] : DEFAULT_FLASH_ENABLED)
 
+#define MAIN_CHANGE_TRACKS_ENABLED ([preferences objectForKey: PREFS_CHANGE_TRACKS_ENABLED_KEY] ? [[preferences objectForKey: PREFS_CHANGE_TRACKS_ENABLED_KEY] boolValue] : DEFAULT_CHANGE_TRACKS_ENABLED)
+
 #define MAIN_SOUND_NAME ([preferences objectForKey: PREFS_SOUND_NAME_KEY] ? [preferences objectForKey: PREFS_SOUND_NAME_KEY] : DEFAULT_SOUND_NAME)
 
 #define MAIN_PATH [NSString stringWithFormat:@"/System/Library/Audio/UISounds/VolumeNotifier/%@", MAIN_SOUND_NAME]
@@ -74,6 +76,64 @@ static NSOperationQueue *queue = [[NSOperationQueue alloc] init];
 static NSError *error = nil;
 static BOOL torchOpen = NO;
 static float systemVolume = 0;
+static int lastButtonPressed; // Volume Down is -1, Volume Up is 1
+static float lastVolume;
+static NSTimeInterval lastTimePressed;
+
+@interface VolumeControl : NSObject
++(id)sharedVolumeControl;
+
+- (void)decreaseVolume;
+- (void)increaseVolume;
+-(BOOL)_isMusicPlayingSomewhere;
+-(float)getMediaVolume;
+@end
+
+@interface SBMediaController : NSObject
++ (id)sharedInstance;
+- (_Bool)togglePlayPause;
+- (_Bool)changeTrack:(int)arg1;
+@end
+
+static void ResetVolume()
+{
+    [[objc_getClass("SBMediaController") sharedInstance] setVolume:lastVolume];
+}
+
+static void ToggleTrack()
+{
+    ResetVolume();
+    [[objc_getClass("SBMediaController") sharedInstance] togglePlayPause];
+}
+
+static void ChangeTrack(int trackNumber)
+{
+    ResetVolume();
+    [[objc_getClass("SBMediaController") sharedInstance] changeTrack:trackNumber];
+}
+
+static void setTorchLevel(double level) {
+    @autoreleasepool {
+        AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+        if ([device hasTorch]) {
+            if (level > 0.1 && level <= 1.0) {
+                [device lockForConfiguration:nil];
+                [device setTorchModeOnWithLevel:level error:nil];
+                [device unlockForConfiguration];
+                if (torchOpen == NO) {
+                    torchOpen = YES;
+                }
+            } else if (level <= 0.1){
+                [device lockForConfiguration:nil];
+                [device setTorchMode:AVCaptureTorchModeOff];
+                [device unlockForConfiguration];
+                if (torchOpen == YES) {
+                    torchOpen = NO;
+                }
+            }
+        }
+    }
+}
 
 @implementation SNDPlay
 
@@ -140,30 +200,12 @@ static float systemVolume = 0;
 
 @end
 
-static void setTorchLevel(double level) {
-    @autoreleasepool {
-        AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-        if ([device hasTorch]) {
-            if (level > 0.1 && level <= 1.0) {
-                [device lockForConfiguration:nil];
-                [device setTorchModeOnWithLevel:level error:nil];
-                [device unlockForConfiguration];
-                if (torchOpen == NO) {
-                    torchOpen = YES;
-                }
-            } else if (level <= 0.1){
-                [device lockForConfiguration:nil];
-                [device setTorchMode:AVCaptureTorchModeOff];
-                [device unlockForConfiguration];
-                if (torchOpen == YES) {
-                    torchOpen = NO;
-                }
-            }
-        }
-    }
-}
-
 %hook VolumeControl
+
+/*
+ BUG: Holding volume up/down now changes tracks fast instead of continuously turning volume up/down
+ POSSIBLE FIX: Check the time stamps; if the time between the time stamps is really low then maybe the bug above occured
+ */
 
 - (void) setVolume:(float)volume {
     %orig(volume);
@@ -173,6 +215,28 @@ static void setTorchLevel(double level) {
 }
 
 - (void) increaseVolume {
+    if (MAIN_ENABLED) {
+        if (MAIN_CHANGE_TRACKS_ENABLED) {
+            if (lastButtonPressed == 1) {
+                if (lastTimePressed + 300 >= [[NSDate date] timeIntervalSince1970] * 1000  && [self _isMusicPlayingSomewhere]) {
+                    lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
+                    ChangeTrack(1);
+                    return;
+                }
+            } else if (lastButtonPressed == -1) {
+                if (lastTimePressed + 300 >= [[NSDate date] timeIntervalSince1970] * 1000) {
+                    lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
+                    ToggleTrack();
+                    return;
+                }
+            }
+            
+            lastButtonPressed = 1;
+            lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
+        }
+        
+        lastVolume = [self getMediaVolume];
+    }
     %orig;
     if (MAIN_ENABLED) {
         if ((IS_PLAYING == NO) || (MAIN_ENABLED_WHEN_PLAYING == YES)) {
@@ -184,6 +248,28 @@ static void setTorchLevel(double level) {
 }
 
 - (void) decreaseVolume {
+    if (MAIN_ENABLED) {
+        if (MAIN_CHANGE_TRACKS_ENABLED) {
+            if (lastButtonPressed == -1) {
+                if (lastTimePressed + 300 >= [[NSDate date] timeIntervalSince1970] * 1000  && [self _isMusicPlayingSomewhere]) {
+                    lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
+                    ChangeTrack(-1);
+                    return;
+                }
+            } else if (lastButtonPressed == 1) {
+                if (lastTimePressed + 300 >= [[NSDate date] timeIntervalSince1970] * 1000) {
+                    lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
+                    ToggleTrack();
+                    return;
+                }
+            }
+            
+            lastButtonPressed = -1;
+            lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
+        }
+        
+        lastVolume = [self getMediaVolume];
+    }
     %orig;
     if (MAIN_ENABLED) {
         if ((IS_PLAYING == NO) || (MAIN_ENABLED_WHEN_PLAYING == YES)) {

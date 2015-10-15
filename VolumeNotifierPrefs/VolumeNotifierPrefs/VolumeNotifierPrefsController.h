@@ -3,7 +3,7 @@
 //  VolumeNotifierPrefs
 //
 //  Created by Zheng on 11/8/14.
-//  Copyright (c) 2014 XunYing Inc. All rights reserved.
+//  Copyright (c) 2015 82Flex. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

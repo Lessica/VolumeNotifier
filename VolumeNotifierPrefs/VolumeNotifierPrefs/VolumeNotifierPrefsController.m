@@ -3,7 +3,7 @@
 //  VolumeNotifierPrefs
 //
 //  Created by Zheng on 11/8/14.
-//  Copyright (c) 2014 XunYing Inc. All rights reserved.
+//  Copyright (c) 2015 82Flex. All rights reserved.
 //
 
 #import <VolumeNotifierPrefsController.h>
@@ -102,8 +102,16 @@
                     @"key" : @"blockHUD"
                     },
                 @{
+                    @"cell" : @"PSSwitchCell",
+                    @"label" : @"Long Press To Change Tracks",
+                    @"default" : @NO,
+                    @"defaults" : @"com.darwindev.VolumeNotifier",
+                    @"PostNotification" : @"com.darwindev.VolumeNotifier-preferencesChanged",
+                    @"key" : @"changeTracks"
+                    },
+                @{
                     @"cell" : @"PSGroupCell",
-                    @"footerText" : @"You can turn off the flashlight from CC."
+                    @"footerText" : @"You can turn off the flashlight from CC.\nVolumeNotifier will not work perfectly when the device is locked."
                     },
                 @{
                     @"cell" : @"PSGroupCell",
@@ -181,7 +189,7 @@
                     },
                 @{
                     @"cell" : @"PSGroupCell",
-                    @"footerText" : @"VolumeNotifier © 2014 82Flex.com"
+                    @"footerText" : @"VolumeNotifier © 2015 82Flex.com"
                     }
             ];
 }
