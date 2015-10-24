@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F531A701BD8E07100DF2E8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F531A6F1BD8E07100DF2E8B /* UIKit.framework */; };
 		0F77F13C1A0C4B480005468E /* SndDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 0F77F13A1A0C4B480005468E /* SndDelegate.h */; };
 		0F77F13D1A0C4B480005468E /* SndDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F77F13B1A0C4B480005468E /* SndDelegate.m */; };
 		0FA8AE951A0E758200195856 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FA8AE941A0E758200195856 /* AudioToolbox.framework */; };
@@ -35,6 +36,7 @@
 		0F3969DA1A12136B00B3864F /* tink.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = tink.aiff; sourceTree = "<group>"; };
 		0F3969DB1A12136B00B3864F /* volume.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = volume.aiff; sourceTree = "<group>"; };
 		0F3969DD1A12142600B3864F /* mavericks.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = mavericks.aiff; sourceTree = "<group>"; };
+		0F531A6F1BD8E07100DF2E8B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0F77F13A1A0C4B480005468E /* SndDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SndDelegate.h; sourceTree = "<group>"; };
 		0F77F13B1A0C4B480005468E /* SndDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SndDelegate.m; sourceTree = "<group>"; };
 		0F9BDF1A1A0BA1D7001645E3 /* beep.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = beep.caf; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F531A701BD8E07100DF2E8B /* UIKit.framework in Frameworks */,
 				0FA8AE961A0E758700195856 /* AVFoundation.framework in Frameworks */,
 				0FA8AE951A0E758200195856 /* AudioToolbox.framework in Frameworks */,
 				0FEFCBAB1A09D549005B9103 /* libsubstrate.dylib in Frameworks */,
@@ -142,6 +145,7 @@
 		0FEFCB8C1A09D524005B9103 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0F531A6F1BD8E07100DF2E8B /* UIKit.framework */,
 				0FA8AE941A0E758200195856 /* AudioToolbox.framework */,
 				0FA8AE911A0E757800195856 /* AVFoundation.framework */,
 				0FEFCBAA1A09D549005B9103 /* libsubstrate.dylib */,
@@ -428,6 +432,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Zheng Wu (253D9QR4TP)";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VolumeNotifier/VolumeNotifier-Prefix.pch";
 				INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries;
@@ -435,6 +440,7 @@
 					"$(inherited)",
 					/opt/iOSOpenDev/lib,
 				);
+				OTHER_LDFLAGS = "-Wl,-segalign,4000";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos7.1;
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
@@ -454,6 +460,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Zheng Wu (253D9QR4TP)";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VolumeNotifier/VolumeNotifier-Prefix.pch";
 				INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries;
@@ -461,6 +468,7 @@
 					"$(inherited)",
 					/opt/iOSOpenDev/lib,
 				);
+				OTHER_LDFLAGS = "-Wl,-segalign,4000";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos7.1;
 				iOSOpenDevBuildPackageOnAnyBuild = NO;

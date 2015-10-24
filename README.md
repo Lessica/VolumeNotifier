@@ -8,3 +8,8 @@ Make sure $THEOS or $iOSOpenDev is set up correctly, and you have Xcode as well 
 Build for profiling > Run BuildPackage.sh with root.
 
 License under the BSD license.
+
+Localization: 
+Simplfied Chinese (zh-Hans): i_82
+Traditional Chinese (zh-Hant): i_82
+Japanese (ja): リン (Rin)

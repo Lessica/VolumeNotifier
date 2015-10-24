@@ -75,7 +75,6 @@
 		0F9AA5CA1A0F10500026F7C5 /* paypal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "paypal@2x.png"; path = "Package/Library/PreferenceBundles/VolumeNotifierPrefs.bundle/paypal@2x.png"; sourceTree = "<group>"; };
 		0F9AA5CB1A0F10550026F7C5 /* twitter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "twitter@2x.png"; path = "Package/Library/PreferenceBundles/VolumeNotifierPrefs.bundle/twitter@2x.png"; sourceTree = "<group>"; };
 		0F9AA5CD1A0F12760026F7C5 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Localizable.strings; sourceTree = "<group>"; };
-		0F9AA5CF1A0F12FA0026F7C5 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = Localizable.strings; sourceTree = "<group>"; };
 		0FA8AE8B1A0E753900195856 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		0FA8AE8D1A0E754000195856 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		0FA8AE8F1A0E755100195856 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -90,8 +89,10 @@
 		0FBD899C1A11173A00AE2B90 /* SKTintedControlCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTintedControlCell.h; sourceTree = "<group>"; };
 		0FBD899D1A11173A00AE2B90 /* SKTintedListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTintedListController.h; sourceTree = "<group>"; };
 		0FBD899E1A11173A00AE2B90 /* SKTintedSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTintedSwitchCell.h; sourceTree = "<group>"; };
+		0FC778131BDBB1E3005E7E8B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = Localizable.strings; sourceTree = "<group>"; };
+		0FC778161BDBB1E3005E7E8B /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = Localizable.strings; sourceTree = "<group>"; };
+		0FC778191BDBB23D005E7E8B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Localizable.strings; sourceTree = "<group>"; };
 		0FD65E091BC3F57A0028B180 /* Preferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Preferences.framework; path = ../../../../../opt/theos/sdks/iPhoneOS8.1.sdk/System/Library/PrivateFrameworks/Preferences.framework; sourceTree = "<group>"; };
-		0FFFDF8E1A0E4A1A00155ACC /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,9 +222,10 @@
 		0F1C7F2F1A0E210D00A88496 /* VolumeNotifierPrefs.bundle */ = {
 			isa = PBXGroup;
 			children = (
+				0FC778171BDBB23D005E7E8B /* ja.lproj */,
+				0FC778111BDBB1E3005E7E8B /* zh-Hans.lproj */,
+				0FC778141BDBB1E3005E7E8B /* zh-Hant.lproj */,
 				0FFFDF8B1A0E4A1A00155ACC /* English.lproj */,
-				0FFFDF8C1A0E4A1A00155ACC /* zh_CN.lproj */,
-				0FFFDF8F1A0E4A1A00155ACC /* zh_TW.lproj */,
 				0F1C7F4C1A0E2D3300A88496 /* VolumeNotifierPrefsIcon.png */,
 				0F1C7F4D1A0E2D3300A88496 /* VolumeNotifierPrefsIcon@2x.png */,
 				0F9AA5CA1A0F10500026F7C5 /* paypal@2x.png */,
@@ -267,6 +269,33 @@
 			path = SettingsKit;
 			sourceTree = "<group>";
 		};
+		0FC778111BDBB1E3005E7E8B /* zh-Hans.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				0FC778121BDBB1E3005E7E8B /* Localizable.strings */,
+			);
+			name = "zh-Hans.lproj";
+			path = "Package/Library/PreferenceBundles/VolumeNotifierPrefs.bundle/zh-Hans.lproj";
+			sourceTree = "<group>";
+		};
+		0FC778141BDBB1E3005E7E8B /* zh-Hant.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				0FC778151BDBB1E3005E7E8B /* Localizable.strings */,
+			);
+			name = "zh-Hant.lproj";
+			path = "Package/Library/PreferenceBundles/VolumeNotifierPrefs.bundle/zh-Hant.lproj";
+			sourceTree = "<group>";
+		};
+		0FC778171BDBB23D005E7E8B /* ja.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				0FC778181BDBB23D005E7E8B /* Localizable.strings */,
+			);
+			name = ja.lproj;
+			path = Package/Library/PreferenceBundles/VolumeNotifierPrefs.bundle/ja.lproj;
+			sourceTree = "<group>";
+		};
 		0FFFDF8B1A0E4A1A00155ACC /* English.lproj */ = {
 			isa = PBXGroup;
 			children = (
@@ -274,24 +303,6 @@
 			);
 			name = English.lproj;
 			path = Package/Library/PreferenceBundles/VolumeNotifierPrefs.bundle/English.lproj;
-			sourceTree = "<group>";
-		};
-		0FFFDF8C1A0E4A1A00155ACC /* zh_CN.lproj */ = {
-			isa = PBXGroup;
-			children = (
-				0FFFDF8D1A0E4A1A00155ACC /* Localizable.strings */,
-			);
-			name = zh_CN.lproj;
-			path = Package/Library/PreferenceBundles/VolumeNotifierPrefs.bundle/zh_CN.lproj;
-			sourceTree = "<group>";
-		};
-		0FFFDF8F1A0E4A1A00155ACC /* zh_TW.lproj */ = {
-			isa = PBXGroup;
-			children = (
-				0F9AA5CE1A0F12FA0026F7C5 /* Localizable.strings */,
-			);
-			name = zh_TW.lproj;
-			path = Package/Library/PreferenceBundles/VolumeNotifierPrefs.bundle/zh_TW.lproj;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -359,6 +370,9 @@
 				zh_CN,
 				English,
 				zh_TW,
+				"zh-Hans",
+				"zh-Hant",
+				ja,
 			);
 			mainGroup = 0F1C7F0B1A0E210C00A88496;
 			productRefGroup = 0F1C7F161A0E210C00A88496 /* Products */;
@@ -415,18 +429,26 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		0F9AA5CE1A0F12FA0026F7C5 /* Localizable.strings */ = {
+		0FC778121BDBB1E3005E7E8B /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				0F9AA5CF1A0F12FA0026F7C5 /* zh_TW */,
+				0FC778131BDBB1E3005E7E8B /* zh-Hans */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		0FFFDF8D1A0E4A1A00155ACC /* Localizable.strings */ = {
+		0FC778151BDBB1E3005E7E8B /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				0FFFDF8E1A0E4A1A00155ACC /* zh_CN */,
+				0FC778161BDBB1E3005E7E8B /* zh-Hant */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		0FC778181BDBB23D005E7E8B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0FC778191BDBB23D005E7E8B /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -462,7 +484,10 @@
 				LIBRARY_SEARCH_PATHS = "/opt/theos/lib/**";
 				MACH_O_TYPE = mh_bundle;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = "-F/opt/theos/frameworks";
+				OTHER_LDFLAGS = (
+					"-F/opt/theos/frameworks",
+					"-Wl,-segalign,4000",
+				);
 				SDKROOT = iphoneos7.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
@@ -489,7 +514,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "/opt/theos/lib/**";
 				MACH_O_TYPE = mh_bundle;
-				OTHER_LDFLAGS = "-F/opt/theos/frameworks";
+				OTHER_LDFLAGS = (
+					"-F/opt/theos/frameworks",
+					"-Wl,-segalign,4000",
+				);
 				SDKROOT = iphoneos7.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -523,7 +551,7 @@
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACH_O_TYPE = mh_bundle;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-Wl,-segalign,4000";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.darwindev.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos7.1;
@@ -565,7 +593,7 @@
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACH_O_TYPE = mh_bundle;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-Wl,-segalign,4000";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.darwindev.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos7.1;
