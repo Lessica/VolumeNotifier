@@ -86,12 +86,32 @@
                     @"key" : @"enableVib"
                     },
                 @{
+                    @"cell" : @"PSSliderCell",
+                    @"label" : @"Vibrate Duration",
+                    @"min" : @1,
+                    @"max" : @1000,
+                    @"default" : @30,
+                    @"defaults" : @"com.darwindev.VolumeNotifier",
+                    @"PostNotification" : @"com.darwindev.VolumeNotifier-preferencesChanged",
+                    @"key" : @"vibDuration"
+                    },
+                @{
                     @"cell" : @"PSSwitchCell",
                     @"label" : @"Enable Flashlight",
                     @"default" : @NO,
                     @"defaults" : @"com.darwindev.VolumeNotifier",
                     @"PostNotification" : @"com.darwindev.VolumeNotifier-preferencesChanged",
                     @"key" : @"enableFlash"
+                    },
+                @{
+                    @"cell" : @"PSSliderCell",
+                    @"label" : @"Flashlight Brightness",
+                    @"min" : @0.001,
+                    @"max" : @1,
+                    @"default" : @1,
+                    @"defaults" : @"com.darwindev.VolumeNotifier",
+                    @"PostNotification" : @"com.darwindev.VolumeNotifier-preferencesChanged",
+                    @"key" : @"flashBrightness"
                     },
                 @{
                     @"cell" : @"PSSwitchCell",

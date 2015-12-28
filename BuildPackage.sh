@@ -5,4 +5,4 @@ sudo find /Users/Zheng/Projects/VolumeNotifier/Products -name ".DS_Store" -depth
 dpkg -e /Users/Zheng/Projects/VolumeNotifier/Packages/*.deb /Users/Zheng/Projects/VolumeNotifier/Products/DEBIAN
 dpkg -x /Users/Zheng/Projects/VolumeNotifier/Packages/*.deb /Users/Zheng/Projects/VolumeNotifier/Products
 dpkg -x /Users/Zheng/Projects/VolumeNotifier/VolumeNotifierPrefs/Packages/*.deb /Users/Zheng/Projects/VolumeNotifier/Products
-dpkg-deb -Z lzma -b /Users/Zheng/Projects/VolumeNotifier/Products /Users/Zheng/Projects/VolumeNotifier/com.darwindev.VolumeNotifier_0.3-4_iphoneos-arm.deb
+dpkg-deb -Z lzma -b /Users/Zheng/Projects/VolumeNotifier/Products /Users/Zheng/Projects/VolumeNotifier/com.darwindev.VolumeNotifier_0.3-5_iphoneos-arm.deb

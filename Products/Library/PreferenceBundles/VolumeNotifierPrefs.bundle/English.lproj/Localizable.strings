@@ -6,7 +6,9 @@
 "Addition"="Addition";
 "Block Volume HUD"="Block Volume HUD";
 "Enable Vibrate"="Enable Vibrate";
+"Vibrate Duration"="Vibrate Duration";
 "Enable Flashlight"="Enable Flashlight";
+"Flashlight Brightness"="Flashlight Brightness";
 "You can turn off the flashlight from CC.\nVolumeNotifier will not work perfectly when the device is locked."="You can turn off the flashlight from CC.\nVolumeNotifier will not work perfectly when the device is locked.";
 "Sound Effect"="Sound Effect";
 "Built-in"="Built-in";

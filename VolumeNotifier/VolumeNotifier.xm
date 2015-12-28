@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
+#import <AudioToolbox/AudioToolbox.h>
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 #import <SndDelegate.h>
@@ -23,8 +24,14 @@
 #define DEFAULT_VIB_ENABLED NO
 #define PREFS_VIB_ENABLED_KEY @"enableVib"
 
+#define DEFAULT_VIB_DURATION 30
+#define PREFS_VIB_DURATION_KEY @"vibDuration"
+
 #define DEFAULT_FLASH_ENABLED NO
 #define PREFS_FLASH_ENABLED_KEY @"enableFlash"
+
+#define DEFAULT_FLASH_BRIGHTNESS 1
+#define PREFS_FLASH_BRIGHTNESS_KEY @"flashBrightness"
 
 #define DEFAULT_CHANGE_TRACKS_ENABLED NO
 #define PREFS_CHANGE_TRACKS_ENABLED_KEY @"changeTracks"
@@ -55,7 +62,11 @@
 
 #define MAIN_VIB_ENABLED ([preferences objectForKey: PREFS_VIB_ENABLED_KEY] ? [[preferences objectForKey: PREFS_VIB_ENABLED_KEY] boolValue] : DEFAULT_VIB_ENABLED)
 
+#define MAIN_VIB_DURATION ([preferences objectForKey: PREFS_VIB_DURATION_KEY] ? [[preferences objectForKey: PREFS_VIB_DURATION_KEY] floatValue] : DEFAULT_VIB_DURATION)
+
 #define MAIN_FLASH_ENABLED ([preferences objectForKey: PREFS_FLASH_ENABLED_KEY] ? [[preferences objectForKey: PREFS_FLASH_ENABLED_KEY] boolValue] : DEFAULT_FLASH_ENABLED)
+
+#define MAIN_FLASH_BRIGHTNESS ([preferences objectForKey: PREFS_FLASH_BRIGHTNESS_KEY] ? [[preferences objectForKey: PREFS_FLASH_BRIGHTNESS_KEY] floatValue] : DEFAULT_FLASH_BRIGHTNESS)
 
 #define MAIN_CHANGE_TRACKS_ENABLED ([preferences objectForKey: PREFS_CHANGE_TRACKS_ENABLED_KEY] ? [[preferences objectForKey: PREFS_CHANGE_TRACKS_ENABLED_KEY] boolValue] : DEFAULT_CHANGE_TRACKS_ENABLED)
 
@@ -72,7 +83,7 @@
 #define APPID @"com.darwindev.VolumeNotifier"
 #define PREFS_PATH [NSString stringWithFormat:@"%@/Library/Preferences/%@.plist", NSHomeDirectory(), APPID]
 
-#define DEFAULT_PREFS [NSDictionary dictionaryWithObjectsAndKeys: @DEFAULT_ENABLED, PREFS_ENABLED_KEY, @DEFAULT_ENABLED_WHEN_PLAYING, PREFS_ENABLED_WHEN_PLAYING_KEY, @DEFAULT_VIB_ENABLED, PREFS_VIB_ENABLED_KEY, DEFAULT_SOUND_NAME, PREFS_SOUND_NAME_KEY, @DEFAULT_SOUND_CHOICE, PREFS_SOUND_CHOICE_KEY, @DEFAULT_ENABLED_IN_CC, PREFS_ENABLED_IN_CC_KEY, @DEFAULT_BLOCK_HUD, PREFS_BLOCK_HUD_KEY, @DEFAULT_FLASH_ENABLED, PREFS_FLASH_ENABLED_KEY, @DEFAULT_TRANSPARENT_HUD, PREFS_TRANSPARENT_HUD_KEY, @DEFAULT_CHANGE_TRACKS_ENABLED, PREFS_CHANGE_TRACKS_ENABLED_KEY, nil]
+#define DEFAULT_PREFS [NSDictionary dictionaryWithObjectsAndKeys: @DEFAULT_ENABLED, PREFS_ENABLED_KEY, @DEFAULT_ENABLED_WHEN_PLAYING, PREFS_ENABLED_WHEN_PLAYING_KEY, @DEFAULT_VIB_ENABLED, PREFS_VIB_ENABLED_KEY, DEFAULT_SOUND_NAME, PREFS_SOUND_NAME_KEY, @DEFAULT_SOUND_CHOICE, PREFS_SOUND_CHOICE_KEY, @DEFAULT_ENABLED_IN_CC, PREFS_ENABLED_IN_CC_KEY, @DEFAULT_BLOCK_HUD, PREFS_BLOCK_HUD_KEY, @DEFAULT_FLASH_ENABLED, PREFS_FLASH_ENABLED_KEY, @DEFAULT_TRANSPARENT_HUD, PREFS_TRANSPARENT_HUD_KEY, @DEFAULT_CHANGE_TRACKS_ENABLED, PREFS_CHANGE_TRACKS_ENABLED_KEY, @DEFAULT_VIB_DURATION, PREFS_VIB_DURATION_KEY, @DEFAULT_FLASH_BRIGHTNESS, PREFS_FLASH_BRIGHTNESS_KEY, nil]
 
 #define IS_IOS_8_PLUS [%c(SBBannerController) instancesRespondToSelector: @selector(_cancelBannerDismissTimers)]
 
@@ -146,6 +157,8 @@ static void setTorchLevel(double level) {
 
 @implementation SNDPlay
 
+FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, objc_object*, NSDictionary*);
+
 - (void) playMedia:(id)data {
     @autoreleasepool {
         SndDelegate *sndMain = [SndDelegate alloc];
@@ -202,7 +215,11 @@ static void setTorchLevel(double level) {
             [queue addOperation:op];
         }
         if (MAIN_VIB_ENABLED) {
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+            NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+            NSArray *pattern = @[@YES, [NSNumber numberWithFloat:MAIN_VIB_DURATION], @NO, @2];
+            dictionary[@"VibePattern"] = pattern;
+            dictionary[@"Intensity"] = @2;
+            AudioServicesPlaySystemSoundWithVibration(kSystemSoundID_Vibrate, nil, dictionary);
         }
     }
 }
@@ -294,7 +311,7 @@ static void setTorchLevel(double level) {
                             volume:(float)vol {
     if (MAIN_ENABLED) {
         if (MAIN_FLASH_ENABLED == YES) {
-            setTorchLevel(vol);
+            setTorchLevel(MAIN_FLASH_BRIGHTNESS);
         } else if (torchOpen == YES) {
             setTorchLevel(0);
         }
@@ -399,7 +416,9 @@ static void loadSettings () {
     if (!preferences || preferences.count == 0) {
         preferences = [DEFAULT_PREFS retain];
     }
-    if (torchOpen == YES) {
+    if (MAIN_FLASH_ENABLED == YES) {
+        setTorchLevel(MAIN_FLASH_BRIGHTNESS);
+    } else {
         setTorchLevel(0);
     }
 }
