@@ -70,10 +70,6 @@
                     },
                 @{
                     @"cell" : @"PSGroupCell",
-                    @"footerText" : @"If there is no music app in background, the sound effect in \"Volume\" will be consistent with the \"Ringer\"."
-                    },
-                @{
-                    @"cell" : @"PSGroupCell",
                     @"label" : @"Addition",
                     @"isStaticText" : @YES
                     },

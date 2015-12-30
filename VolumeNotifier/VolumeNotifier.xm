@@ -6,6 +6,8 @@
 #import <SndDelegate.h>
 #import <VolumeNotifier.h>
 
+#define DEFAULT_CHANGING_DELAY 200
+
 #define DEFAULT_ENABLED YES
 #define PREFS_ENABLED_KEY @"mainSwitch"
 
@@ -236,19 +238,16 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
  */
 
 - (void) increaseVolume {
-    if (IS_LOCKED) {
-        return;
-    }
     if (MAIN_ENABLED) {
         if (MAIN_CHANGE_TRACKS_ENABLED) {
             if (lastButtonPressed == 1) {
-                if (lastTimePressed + 200 >= [[NSDate date] timeIntervalSince1970] * 1000 && (![self respondsToSelector:@selector(_isMusicPlayingSomewhere)] || [self _isMusicPlayingSomewhere])) {
+                if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000 && (![self respondsToSelector:@selector(_isMusicPlayingSomewhere)] || [self _isMusicPlayingSomewhere])) {
                     lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
                     ChangeTrack(1);
                     return;
                 }
             } else if (lastButtonPressed == -1) {
-                if (lastTimePressed + 200 >= [[NSDate date] timeIntervalSince1970] * 1000) {
+                if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000) {
                     lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
                     ToggleTrack();
                     return;
@@ -262,29 +261,19 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
         lastVolume = [self getMediaVolume];
     }
     %orig;
-    if (MAIN_ENABLED) {
-        if ((IS_PLAYING == NO) || (MAIN_ENABLED_WHEN_PLAYING == YES)) {
-            SNDPlay *sndObj = [SNDPlay alloc];
-            [sndObj playSound:1];
-            [sndObj release];
-        }
-    }
 }
 
 - (void) decreaseVolume {
-    if (IS_LOCKED) {
-        return;
-    }
     if (MAIN_ENABLED) {
         if (MAIN_CHANGE_TRACKS_ENABLED) {
             if (lastButtonPressed == -1) {
-                if (lastTimePressed + 200 >= [[NSDate date] timeIntervalSince1970] * 1000  && (![self respondsToSelector:@selector(_isMusicPlayingSomewhere)] || [self _isMusicPlayingSomewhere])) {
+                if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000  && (![self respondsToSelector:@selector(_isMusicPlayingSomewhere)] || [self _isMusicPlayingSomewhere])) {
                     lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
                     ChangeTrack(-1);
                     return;
                 }
             } else if (lastButtonPressed == 1) {
-                if (lastTimePressed + 200 >= [[NSDate date] timeIntervalSince1970] * 1000) {
+                if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000) {
                     lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
                     ToggleTrack();
                     return;
@@ -298,18 +287,20 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
         lastVolume = [self getMediaVolume];
     }
     %orig;
-    if (MAIN_ENABLED) {
-        if ((IS_PLAYING == NO) || (MAIN_ENABLED_WHEN_PLAYING == YES)) {
-            SNDPlay *sndObj = [SNDPlay alloc];
-            [sndObj playSound:1];
-            [sndObj release];
-        }
-    }
 }
 
 - (void) _presentVolumeHUDWithMode:(int)mode
                             volume:(float)vol {
     if (MAIN_ENABLED) {
+        if (mode == 1 || (MAIN_ENABLED_WHEN_PLAYING == YES && IS_PLAYING == YES)) {
+            SNDPlay *sndObj = [SNDPlay alloc];
+            [sndObj playSound:1];
+            [sndObj release];
+        } else if ((mode == 0 || mode == 2) && (MAIN_ENABLED_WHEN_PLAYING == YES || IS_PLAYING == NO)) {
+            SNDPlay *sndObj = [SNDPlay alloc];
+            [sndObj playSound:2];
+            [sndObj release];
+        }
         if (MAIN_FLASH_ENABLED == YES) {
             setTorchLevel(MAIN_FLASH_BRIGHTNESS);
         } else if (torchOpen == YES) {
@@ -416,10 +407,12 @@ static void loadSettings () {
     if (!preferences || preferences.count == 0) {
         preferences = [DEFAULT_PREFS retain];
     }
-    if (MAIN_FLASH_ENABLED == YES) {
-        setTorchLevel(MAIN_FLASH_BRIGHTNESS);
-    } else {
-        setTorchLevel(0);
+    if (torchOpen) {
+        if (MAIN_FLASH_ENABLED == YES) {
+            setTorchLevel(MAIN_FLASH_BRIGHTNESS);
+        } else {
+            setTorchLevel(0);
+        }
     }
 }
 

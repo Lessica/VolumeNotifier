@@ -7,6 +7,8 @@
 #import <SndDelegate.h>
 #import <VolumeNotifier.h>
 
+#define DEFAULT_CHANGING_DELAY 200
+
 #define DEFAULT_ENABLED YES
 #define PREFS_ENABLED_KEY @"mainSwitch"
 
@@ -79,10 +81,10 @@
 
 #include <logos/logos.h>
 #include <substrate.h>
-@class _UIBackdropContentView; @class MPUMediaControlsVolumeView; @class SBMediaController; @class SBCCFlashlightSetting; @class SBHUDView; @class VolumeControl; @class SBBannerController; 
+@class SBBannerController; @class SBCCFlashlightSetting; @class SBMediaController; @class MPUMediaControlsVolumeView; @class _UIBackdropContentView; @class SBHUDView; @class VolumeControl; 
 
 static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$_UIBackdropContentView(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("_UIBackdropContentView"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBMediaController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBMediaController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBBannerController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBBannerController"); } return _klass; }
-#line 79 "/Users/Zheng/Projects/VolumeNotifier/VolumeNotifier/VolumeNotifier.xm"
+#line 81 "/Users/Zheng/Projects/VolumeNotifier/VolumeNotifier/VolumeNotifier.xm"
 #define IS_PLAYING ([[_logos_static_class_lookup$SBMediaController() sharedInstance] isPlaying])
 
 #define SOUND_PREFS_PATH [NSString stringWithFormat:@"%@/Library/Preferences/%@.plist", NSHomeDirectory(), @"com.apple.preferences.sounds"]
@@ -243,19 +245,16 @@ static void (*_logos_orig$VolumeNotifier$VolumeControl$increaseVolume)(VolumeCon
 
 
 static void _logos_method$VolumeNotifier$VolumeControl$increaseVolume(VolumeControl* self, SEL _cmd) {
-    if (IS_LOCKED) {
-        return;
-    }
     if (MAIN_ENABLED) {
         if (MAIN_CHANGE_TRACKS_ENABLED) {
             if (lastButtonPressed == 1) {
-                if (lastTimePressed + 200 >= [[NSDate date] timeIntervalSince1970] * 1000 && (![self respondsToSelector:@selector(_isMusicPlayingSomewhere)] || [self _isMusicPlayingSomewhere])) {
+                if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000 && (![self respondsToSelector:@selector(_isMusicPlayingSomewhere)] || [self _isMusicPlayingSomewhere])) {
                     lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
                     ChangeTrack(1);
                     return;
                 }
             } else if (lastButtonPressed == -1) {
-                if (lastTimePressed + 200 >= [[NSDate date] timeIntervalSince1970] * 1000) {
+                if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000) {
                     lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
                     ToggleTrack();
                     return;
@@ -269,29 +268,19 @@ static void _logos_method$VolumeNotifier$VolumeControl$increaseVolume(VolumeCont
         lastVolume = [self getMediaVolume];
     }
     _logos_orig$VolumeNotifier$VolumeControl$increaseVolume(self, _cmd);
-    if (MAIN_ENABLED) {
-        if ((IS_PLAYING == NO) || (MAIN_ENABLED_WHEN_PLAYING == YES)) {
-            SNDPlay *sndObj = [SNDPlay alloc];
-            [sndObj playSound:1];
-            [sndObj release];
-        }
-    }
 }
 
 static void _logos_method$VolumeNotifier$VolumeControl$decreaseVolume(VolumeControl* self, SEL _cmd) {
-    if (IS_LOCKED) {
-        return;
-    }
     if (MAIN_ENABLED) {
         if (MAIN_CHANGE_TRACKS_ENABLED) {
             if (lastButtonPressed == -1) {
-                if (lastTimePressed + 200 >= [[NSDate date] timeIntervalSince1970] * 1000  && (![self respondsToSelector:@selector(_isMusicPlayingSomewhere)] || [self _isMusicPlayingSomewhere])) {
+                if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000  && (![self respondsToSelector:@selector(_isMusicPlayingSomewhere)] || [self _isMusicPlayingSomewhere])) {
                     lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
                     ChangeTrack(-1);
                     return;
                 }
             } else if (lastButtonPressed == 1) {
-                if (lastTimePressed + 200 >= [[NSDate date] timeIntervalSince1970] * 1000) {
+                if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000) {
                     lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
                     ToggleTrack();
                     return;
@@ -305,18 +294,20 @@ static void _logos_method$VolumeNotifier$VolumeControl$decreaseVolume(VolumeCont
         lastVolume = [self getMediaVolume];
     }
     _logos_orig$VolumeNotifier$VolumeControl$decreaseVolume(self, _cmd);
-    if (MAIN_ENABLED) {
-        if ((IS_PLAYING == NO) || (MAIN_ENABLED_WHEN_PLAYING == YES)) {
-            SNDPlay *sndObj = [SNDPlay alloc];
-            [sndObj playSound:1];
-            [sndObj release];
-        }
-    }
 }
 
 
 static void _logos_method$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$(VolumeControl* self, SEL _cmd, int mode, float vol) {
     if (MAIN_ENABLED) {
+        if (mode == 1 || (MAIN_ENABLED_WHEN_PLAYING == YES && IS_PLAYING == YES)) {
+            SNDPlay *sndObj = [SNDPlay alloc];
+            [sndObj playSound:1];
+            [sndObj release];
+        } else if ((mode == 0 || mode == 2) && (MAIN_ENABLED_WHEN_PLAYING == YES || IS_PLAYING == NO)) {
+            SNDPlay *sndObj = [SNDPlay alloc];
+            [sndObj playSound:2];
+            [sndObj release];
+        }
         if (MAIN_FLASH_ENABLED == YES) {
             setTorchLevel(MAIN_FLASH_BRIGHTNESS);
         } else if (torchOpen == YES) {
@@ -423,10 +414,12 @@ static void loadSettings () {
     if (!preferences || preferences.count == 0) {
         preferences = [DEFAULT_PREFS retain];
     }
-    if (MAIN_FLASH_ENABLED == YES) {
-        setTorchLevel(MAIN_FLASH_BRIGHTNESS);
-    } else {
-        setTorchLevel(0);
+    if (torchOpen) {
+        if (MAIN_FLASH_ENABLED == YES) {
+            setTorchLevel(MAIN_FLASH_BRIGHTNESS);
+        } else {
+            setTorchLevel(0);
+        }
     }
 }
 
@@ -434,7 +427,7 @@ static void didChangeSettings (CFNotificationCenterRef center, void *observer, C
     loadSettings();
 }
 
-static __attribute__((constructor)) void _logosLocalCtor_0279cea5() {
+static __attribute__((constructor)) void _logosLocalCtor_1e68fc17() {
     CFNotificationCenterRef center = CFNotificationCenterGetDarwinNotifyCenter();
     CFNotificationCenterAddObserver(center, NULL, &didChangeSettings, (CFStringRef)@"com.darwindev.VolumeNotifier-preferencesChanged", NULL, 0);
     
