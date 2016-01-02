@@ -297,7 +297,6 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 - (void) _presentVolumeHUDWithMode:(int)mode
                             volume:(float)vol {
     if (MAIN_ENABLED) {
-        NSLog(@"Mode: %d", mode);
         if ((MAIN_BLOCK_HUD) == NO) {
             %orig(mode, vol);
         }

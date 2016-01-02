@@ -1,6 +1,6 @@
 Package: com.darwindev.VolumeNotifierPrefs
 Name: VolumeNotifierPrefs
-Version: 0.3-6
+Version: 0.3-7
 Section: PreferenceBundles
 Depends: firmware (>= 7.0), mobilesubstrate, preferenceloader
 Architecture: iphoneos-arm
