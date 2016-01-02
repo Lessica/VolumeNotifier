@@ -243,63 +243,59 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
  */
 
 - (void) increaseVolume {
-    if (MAIN_ENABLED) {
-        if (MAIN_CHANGE_TRACKS_ENABLED) {
-            if (lastButtonPressed == 1) {
-                if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000 && (![self respondsToSelector:@selector(_isMusicPlayingSomewhere)] || [self _isMusicPlayingSomewhere])) {
-                    lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
-                    ChangeTrack(1);
-                    return;
-                }
-            } else if (lastButtonPressed == -1) {
-                if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000) {
-                    lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
-                    ToggleTrack();
-                    return;
-                }
+    if (MAIN_CHANGE_TRACKS_ENABLED) {
+        if (lastButtonPressed == 1) {
+            if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000 && (![self respondsToSelector:@selector(_isMusicPlayingSomewhere)] || [self _isMusicPlayingSomewhere])) {
+                lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
+                ChangeTrack(1);
+                return;
             }
-            
-            lastButtonPressed = 1;
-            lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
+        } else if (lastButtonPressed == -1) {
+            if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000) {
+                lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
+                ToggleTrack();
+                return;
+            }
         }
         
-        lastVolume = [self getMediaVolume];
+        lastButtonPressed = 1;
+        lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
     }
+    
+    lastVolume = [self getMediaVolume];
     %orig;
 }
 
 - (void) decreaseVolume {
-    if (MAIN_ENABLED) {
-        if (MAIN_CHANGE_TRACKS_ENABLED) {
-            if (lastButtonPressed == -1) {
-                if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000  && (![self respondsToSelector:@selector(_isMusicPlayingSomewhere)] || [self _isMusicPlayingSomewhere])) {
-                    lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
-                    ChangeTrack(-1);
-                    return;
-                }
-            } else if (lastButtonPressed == 1) {
-                if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000) {
-                    lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
-                    ToggleTrack();
-                    return;
-                }
+    if (MAIN_CHANGE_TRACKS_ENABLED) {
+        if (lastButtonPressed == -1) {
+            if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000  && (![self respondsToSelector:@selector(_isMusicPlayingSomewhere)] || [self _isMusicPlayingSomewhere])) {
+                lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
+                ChangeTrack(-1);
+                return;
             }
-            
-            lastButtonPressed = -1;
-            lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
+        } else if (lastButtonPressed == 1) {
+            if (lastTimePressed + DEFAULT_CHANGING_DELAY >= [[NSDate date] timeIntervalSince1970] * 1000) {
+                lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
+                ToggleTrack();
+                return;
+            }
         }
         
-        lastVolume = [self getMediaVolume];
+        lastButtonPressed = -1;
+        lastTimePressed = [[NSDate date] timeIntervalSince1970] * 1000;
     }
+    
+    lastVolume = [self getMediaVolume];
     %orig;
 }
 
 - (void) _presentVolumeHUDWithMode:(int)mode
-                            volume:(float)vol {
+                            volume:(float)vol
+{
     if (MAIN_ENABLED) {
-        if ((MAIN_BLOCK_HUD) == NO) {
+        if ((MAIN_BLOCK_HUD) == NO)
             %orig(mode, vol);
-        }
         if (mode == 1 || (MAIN_ENABLED_WHEN_PLAYING == YES && IS_PLAYING == YES)) {
             SNDPlay *sndObj = [[SNDPlay alloc] autorelease];
             [sndObj playSound:1];
@@ -307,14 +303,13 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
             SNDPlay *sndObj = [[SNDPlay alloc] autorelease];
             [sndObj playSound:2];
         }
-        if (MAIN_FLASH_ENABLED == YES) {
-            setTorchLevel(MAIN_FLASH_BRIGHTNESS);
-        } else if (torchOpen == YES) {
-            setTorchLevel(0);
-        }
     } else {
         %orig(mode, vol);
     }
+    if (MAIN_FLASH_ENABLED == YES)
+        setTorchLevel(MAIN_FLASH_BRIGHTNESS);
+    else if (torchOpen == YES)
+        setTorchLevel(0);
 }
 
 %end
@@ -322,7 +317,7 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 %hook SBHUDView
 
 - (void) layoutSubviews {
-    if (MAIN_ENABLED && MAIN_TRANSPARENT_HUD) {
+    if (MAIN_TRANSPARENT_HUD) {
         id backdropView = MSHookIvar<id>(self, "_backdropView");
         if ([backdropView respondsToSelector:@selector(subviews)]) {
             NSArray *subViews = [backdropView subviews];
@@ -360,7 +355,7 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 %hook SBCCFlashlightSetting
 
 - (bool) isFlashlightOn {
-    if (MAIN_ENABLED && MAIN_FLASH_ENABLED) {
+    if (MAIN_FLASH_ENABLED) {
         if (%orig || (torchOpen == YES)) {
             return YES;
         } else {
@@ -372,7 +367,7 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 }
 
 - (bool) _enableTorch:(bool)arg1 {
-    if (MAIN_ENABLED && MAIN_FLASH_ENABLED) {
+    if (MAIN_FLASH_ENABLED) {
         if (torchOpen == YES) {
             setTorchLevel(0);
             return NO;
@@ -382,7 +377,7 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 }
 
 - (void) _updateState {
-    if (MAIN_ENABLED && MAIN_FLASH_ENABLED) {
+    if (MAIN_FLASH_ENABLED) {
         if (torchOpen == YES) {
             return;
         }
@@ -409,13 +404,11 @@ static void loadSettings () {
         preferences = [DEFAULT_PREFS retain];
     }
     if (MAIN_ENABLED) {
-        NSError *error = nil;
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:&error];
-        [[AVAudioSession sharedInstance] setActive:YES error:&error];
-        [error release];
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+        [[AVAudioSession sharedInstance] setActive:YES error:nil];
     }
     if (torchOpen) {
-        if (MAIN_ENABLED == YES && MAIN_FLASH_ENABLED == YES) {
+        if (MAIN_FLASH_ENABLED == YES) {
             setTorchLevel(MAIN_FLASH_BRIGHTNESS);
         } else {
             setTorchLevel(0);

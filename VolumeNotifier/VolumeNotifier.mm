@@ -81,9 +81,9 @@
 
 #include <logos/logos.h>
 #include <substrate.h>
-@class SBMediaController; @class _UIBackdropContentView; @class SBBannerController; @class VolumeControl; @class SBHUDView; @class MPUMediaControlsVolumeView; @class SBCCFlashlightSetting; 
+@class SBBannerController; @class SBCCFlashlightSetting; @class MPUMediaControlsVolumeView; @class VolumeControl; @class SBHUDView; @class SBMediaController; @class _UIBackdropContentView; 
 
-static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$_UIBackdropContentView(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("_UIBackdropContentView"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBMediaController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBMediaController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBBannerController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBBannerController"); } return _klass; }
+static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBMediaController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBMediaController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$_UIBackdropContentView(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("_UIBackdropContentView"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBBannerController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBBannerController"); } return _klass; }
 #line 81 "/Users/Zheng/Projects/VolumeNotifier/VolumeNotifier/VolumeNotifier.xm"
 #define IS_PLAYING ([[_logos_static_class_lookup$SBMediaController() sharedInstance] isPlaying])
 
@@ -335,7 +335,7 @@ static void _logos_method$VolumeNotifier$SBHUDView$layoutSubviews(SBHUDView* sel
             NSArray *subViews = [backdropView subviews];
             for (UIView *subView in subViews) {
                 if (![subView isMemberOfClass:[_logos_static_class_lookup$_UIBackdropContentView() class]]) {
-                    [subView setHidden:YES];
+                    subView.alpha = 1;
                 }
             }
         }
@@ -416,10 +416,8 @@ static void loadSettings () {
         preferences = [DEFAULT_PREFS retain];
     }
     if (MAIN_ENABLED) {
-        NSError *error = nil;
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:&error];
-        [[AVAudioSession sharedInstance] setActive:YES error:&error];
-        [error release];
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+        [[AVAudioSession sharedInstance] setActive:YES error:nil];
     }
     if (torchOpen) {
         if (MAIN_ENABLED == YES && MAIN_FLASH_ENABLED == YES) {
@@ -434,7 +432,7 @@ static void didChangeSettings (CFNotificationCenterRef center, void *observer, C
     loadSettings();
 }
 
-static __attribute__((constructor)) void _logosLocalCtor_0279cea5() {
+static __attribute__((constructor)) void _logosLocalCtor_bd49c3a9() {
     CFNotificationCenterRef center = CFNotificationCenterGetDarwinNotifyCenter();
     CFNotificationCenterAddObserver(center, NULL, &didChangeSettings, (CFStringRef)@"com.darwindev.VolumeNotifier-preferencesChanged", NULL, 0);
     loadSettings();
