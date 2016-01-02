@@ -81,9 +81,9 @@
 
 #include <logos/logos.h>
 #include <substrate.h>
-@class SBBannerController; @class SBCCFlashlightSetting; @class SBMediaController; @class MPUMediaControlsVolumeView; @class _UIBackdropContentView; @class SBHUDView; @class VolumeControl; 
+@class VolumeControl; @class SBHUDView; @class _UIBackdropContentView; @class MPUMediaControlsVolumeView; @class SBMediaController; @class SBBannerController; @class SBCCFlashlightSetting; 
 
-static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$_UIBackdropContentView(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("_UIBackdropContentView"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBMediaController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBMediaController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBBannerController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBBannerController"); } return _klass; }
+static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBBannerController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBBannerController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBMediaController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBMediaController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$_UIBackdropContentView(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("_UIBackdropContentView"); } return _klass; }
 #line 81 "/Users/Zheng/Projects/VolumeNotifier/VolumeNotifier/VolumeNotifier.xm"
 #define IS_PLAYING ([[_logos_static_class_lookup$SBMediaController() sharedInstance] isPlaying])
 
@@ -168,6 +168,14 @@ static void setTorchLevel(double level) {
 
 FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, objc_object*, NSDictionary*);
 
+- (void) playVibrate {
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    NSArray *pattern = @[@YES, [NSNumber numberWithFloat:MAIN_VIB_DURATION], @NO, @2];
+    dictionary[@"VibePattern"] = pattern;
+    dictionary[@"Intensity"] = @2;
+    AudioServicesPlaySystemSoundWithVibration(kSystemSoundID_Vibrate, nil, dictionary);
+}
+
 - (void) playMedia:(id)data {
     @autoreleasepool {
         SndDelegate *sndMain = [SndDelegate alloc];
@@ -224,11 +232,8 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
             [queue addOperation:op];
         }
         if (MAIN_VIB_ENABLED) {
-            NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-            NSArray *pattern = @[@YES, [NSNumber numberWithFloat:MAIN_VIB_DURATION], @NO, @2];
-            dictionary[@"VibePattern"] = pattern;
-            dictionary[@"Intensity"] = @2;
-            AudioServicesPlaySystemSoundWithVibration(kSystemSoundID_Vibrate, nil, dictionary);
+            NSInvocationOperation *op = [[[NSInvocationOperation alloc] initWithTarget:self selector:@selector(playVibrate) object:nil] autorelease];
+            [queue addOperation:op];
         }
     }
 }
@@ -299,22 +304,21 @@ static void _logos_method$VolumeNotifier$VolumeControl$decreaseVolume(VolumeCont
 
 static void _logos_method$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$(VolumeControl* self, SEL _cmd, int mode, float vol) {
     if (MAIN_ENABLED) {
+        NSLog(@"Mode: %d", mode);
+        if ((MAIN_BLOCK_HUD) == NO) {
+            _logos_orig$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$(self, _cmd, mode, vol);
+        }
         if (mode == 1 || (MAIN_ENABLED_WHEN_PLAYING == YES && IS_PLAYING == YES)) {
-            SNDPlay *sndObj = [SNDPlay alloc];
+            SNDPlay *sndObj = [[SNDPlay alloc] autorelease];
             [sndObj playSound:1];
-            [sndObj release];
         } else if ((mode == 0 || mode == 2) && (MAIN_ENABLED_WHEN_PLAYING == YES || IS_PLAYING == NO)) {
-            SNDPlay *sndObj = [SNDPlay alloc];
+            SNDPlay *sndObj = [[SNDPlay alloc] autorelease];
             [sndObj playSound:2];
-            [sndObj release];
         }
         if (MAIN_FLASH_ENABLED == YES) {
             setTorchLevel(MAIN_FLASH_BRIGHTNESS);
         } else if (torchOpen == YES) {
             setTorchLevel(0);
-        }
-        if ((MAIN_BLOCK_HUD) == NO) {
-            _logos_orig$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$(self, _cmd, mode, vol);
         }
     } else {
         _logos_orig$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$(self, _cmd, mode, vol);
@@ -350,12 +354,10 @@ static void _logos_method$VolumeNotifier$MPUMediaControlsVolumeView$_volumeSlide
         if (IS_PLAYING == NO) {
             SNDPlay *sndObj = [SNDPlay alloc];
             [sndObj playSound:2];
-            [sndObj release];
         } else {
             if (MAIN_ENABLED_WHEN_PLAYING == YES) {
                 SNDPlay *sndObj = [SNDPlay alloc];
                 [sndObj playSound:1];
-                [sndObj release];
             }
         }
     }
@@ -427,10 +429,12 @@ static void didChangeSettings (CFNotificationCenterRef center, void *observer, C
     loadSettings();
 }
 
-static __attribute__((constructor)) void _logosLocalCtor_1e68fc17() {
+static __attribute__((constructor)) void _logosLocalCtor_8b312d62() {
     CFNotificationCenterRef center = CFNotificationCenterGetDarwinNotifyCenter();
     CFNotificationCenterAddObserver(center, NULL, &didChangeSettings, (CFStringRef)@"com.darwindev.VolumeNotifier-preferencesChanged", NULL, 0);
-    
+    NSError *error;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:&error];
     loadSettings();
     {Class _logos_class$VolumeNotifier$VolumeControl = objc_getClass("VolumeControl"); MSHookMessageEx(_logos_class$VolumeNotifier$VolumeControl, @selector(increaseVolume), (IMP)&_logos_method$VolumeNotifier$VolumeControl$increaseVolume, (IMP*)&_logos_orig$VolumeNotifier$VolumeControl$increaseVolume);MSHookMessageEx(_logos_class$VolumeNotifier$VolumeControl, @selector(decreaseVolume), (IMP)&_logos_method$VolumeNotifier$VolumeControl$decreaseVolume, (IMP*)&_logos_orig$VolumeNotifier$VolumeControl$decreaseVolume);MSHookMessageEx(_logos_class$VolumeNotifier$VolumeControl, @selector(_presentVolumeHUDWithMode:volume:), (IMP)&_logos_method$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$, (IMP*)&_logos_orig$VolumeNotifier$VolumeControl$_presentVolumeHUDWithMode$volume$);Class _logos_class$VolumeNotifier$SBHUDView = objc_getClass("SBHUDView"); MSHookMessageEx(_logos_class$VolumeNotifier$SBHUDView, @selector(layoutSubviews), (IMP)&_logos_method$VolumeNotifier$SBHUDView$layoutSubviews, (IMP*)&_logos_orig$VolumeNotifier$SBHUDView$layoutSubviews);Class _logos_class$VolumeNotifier$MPUMediaControlsVolumeView = objc_getClass("MPUMediaControlsVolumeView"); MSHookMessageEx(_logos_class$VolumeNotifier$MPUMediaControlsVolumeView, @selector(_volumeSliderStoppedChanging:), (IMP)&_logos_method$VolumeNotifier$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$, (IMP*)&_logos_orig$VolumeNotifier$MPUMediaControlsVolumeView$_volumeSliderStoppedChanging$);Class _logos_class$VolumeNotifier$SBCCFlashlightSetting = objc_getClass("SBCCFlashlightSetting"); MSHookMessageEx(_logos_class$VolumeNotifier$SBCCFlashlightSetting, @selector(isFlashlightOn), (IMP)&_logos_method$VolumeNotifier$SBCCFlashlightSetting$isFlashlightOn, (IMP*)&_logos_orig$VolumeNotifier$SBCCFlashlightSetting$isFlashlightOn);MSHookMessageEx(_logos_class$VolumeNotifier$SBCCFlashlightSetting, @selector(_enableTorch:), (IMP)&_logos_method$VolumeNotifier$SBCCFlashlightSetting$_enableTorch$, (IMP*)&_logos_orig$VolumeNotifier$SBCCFlashlightSetting$_enableTorch$);MSHookMessageEx(_logos_class$VolumeNotifier$SBCCFlashlightSetting, @selector(_updateState), (IMP)&_logos_method$VolumeNotifier$SBCCFlashlightSetting$_updateState, (IMP*)&_logos_orig$VolumeNotifier$SBCCFlashlightSetting$_updateState);}
 }

@@ -161,6 +161,14 @@ static void setTorchLevel(double level) {
 
 FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, objc_object*, NSDictionary*);
 
+- (void) playVibrate {
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    NSArray *pattern = @[@YES, [NSNumber numberWithFloat:MAIN_VIB_DURATION], @NO, @2];
+    dictionary[@"VibePattern"] = pattern;
+    dictionary[@"Intensity"] = @2;
+    AudioServicesPlaySystemSoundWithVibration(kSystemSoundID_Vibrate, nil, dictionary);
+}
+
 - (void) playMedia:(id)data {
     @autoreleasepool {
         SndDelegate *sndMain = [SndDelegate alloc];
@@ -217,11 +225,8 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
             [queue addOperation:op];
         }
         if (MAIN_VIB_ENABLED) {
-            NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-            NSArray *pattern = @[@YES, [NSNumber numberWithFloat:MAIN_VIB_DURATION], @NO, @2];
-            dictionary[@"VibePattern"] = pattern;
-            dictionary[@"Intensity"] = @2;
-            AudioServicesPlaySystemSoundWithVibration(kSystemSoundID_Vibrate, nil, dictionary);
+            NSInvocationOperation *op = [[[NSInvocationOperation alloc] initWithTarget:self selector:@selector(playVibrate) object:nil] autorelease];
+            [queue addOperation:op];
         }
     }
 }
@@ -292,22 +297,21 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 - (void) _presentVolumeHUDWithMode:(int)mode
                             volume:(float)vol {
     if (MAIN_ENABLED) {
+        NSLog(@"Mode: %d", mode);
+        if ((MAIN_BLOCK_HUD) == NO) {
+            %orig(mode, vol);
+        }
         if (mode == 1 || (MAIN_ENABLED_WHEN_PLAYING == YES && IS_PLAYING == YES)) {
-            SNDPlay *sndObj = [SNDPlay alloc];
+            SNDPlay *sndObj = [[SNDPlay alloc] autorelease];
             [sndObj playSound:1];
-            [sndObj release];
         } else if ((mode == 0 || mode == 2) && (MAIN_ENABLED_WHEN_PLAYING == YES || IS_PLAYING == NO)) {
-            SNDPlay *sndObj = [SNDPlay alloc];
+            SNDPlay *sndObj = [[SNDPlay alloc] autorelease];
             [sndObj playSound:2];
-            [sndObj release];
         }
         if (MAIN_FLASH_ENABLED == YES) {
             setTorchLevel(MAIN_FLASH_BRIGHTNESS);
         } else if (torchOpen == YES) {
             setTorchLevel(0);
-        }
-        if ((MAIN_BLOCK_HUD) == NO) {
-            %orig(mode, vol);
         }
     } else {
         %orig(mode, vol);
@@ -343,12 +347,10 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
         if (IS_PLAYING == NO) {
             SNDPlay *sndObj = [SNDPlay alloc];
             [sndObj playSound:2];
-            [sndObj release];
         } else {
             if (MAIN_ENABLED_WHEN_PLAYING == YES) {
                 SNDPlay *sndObj = [SNDPlay alloc];
                 [sndObj playSound:1];
-                [sndObj release];
             }
         }
     }
@@ -407,8 +409,14 @@ static void loadSettings () {
     if (!preferences || preferences.count == 0) {
         preferences = [DEFAULT_PREFS retain];
     }
+    if (MAIN_ENABLED) {
+        NSError *error = nil;
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:&error];
+        [[AVAudioSession sharedInstance] setActive:YES error:&error];
+        [error release];
+    }
     if (torchOpen) {
-        if (MAIN_FLASH_ENABLED == YES) {
+        if (MAIN_ENABLED == YES && MAIN_FLASH_ENABLED == YES) {
             setTorchLevel(MAIN_FLASH_BRIGHTNESS);
         } else {
             setTorchLevel(0);
@@ -423,7 +431,6 @@ static void didChangeSettings (CFNotificationCenterRef center, void *observer, C
 %ctor {
     CFNotificationCenterRef center = CFNotificationCenterGetDarwinNotifyCenter();
     CFNotificationCenterAddObserver(center, NULL, &didChangeSettings, (CFStringRef)@"com.darwindev.VolumeNotifier-preferencesChanged", NULL, 0);
-    
     loadSettings();
     %init(VolumeNotifier);
 }

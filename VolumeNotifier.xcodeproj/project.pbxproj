@@ -305,7 +305,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		0FEFCB841A09D524005B9103 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -327,7 +327,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/opt/iOSOpenDev/bin/iosod --xcbp";
+			shellScript = "/opt/iOSOpenDev/bin/iosod --xcbp\n/Users/Zheng/Projects/VolumeNotifier/BuildPackage.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -448,9 +448,9 @@
 				VALID_ARCHS = "arm64 armv7s armv7";
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
-				iOSOpenDevDevice = 10.0.1.17;
+				iOSOpenDevDevice = 192.168.2.150;
 				iOSOpenDevInstallOnAnyBuild = NO;
-				iOSOpenDevInstallOnProfiling = NO;
+				iOSOpenDevInstallOnProfiling = YES;
 				iOSOpenDevRespringOnInstall = YES;
 				iOSOpenDevUsePackageVersionPList = YES;
 			};
@@ -477,9 +477,9 @@
 				VALID_ARCHS = "arm64 armv7s armv7";
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
-				iOSOpenDevDevice = 10.0.1.17;
+				iOSOpenDevDevice = 192.168.2.150;
 				iOSOpenDevInstallOnAnyBuild = NO;
-				iOSOpenDevInstallOnProfiling = NO;
+				iOSOpenDevInstallOnProfiling = YES;
 				iOSOpenDevRespringOnInstall = YES;
 				iOSOpenDevUsePackageVersionPList = YES;
 			};
